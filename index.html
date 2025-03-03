@@ -48,7 +48,7 @@
         generatedCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit code
 
         const templateParams = {
-            to_email: userEmail,  // Send to the entered email
+            to_email: userEmail,  // This ensures the email is sent to the user
             verification_code: generatedCode
         };
 
@@ -58,7 +58,7 @@
                 document.getElementById("emailStep").classList.add("hidden");
                 document.getElementById("codeStep").classList.remove("hidden");
             })
-            .catch(() => showMessage("Failed to send email!", "error"));
+            .catch((error) => showMessage("Failed to send email. Error: " + error.text, "error"));
     }
 
     function verifyCode() {
