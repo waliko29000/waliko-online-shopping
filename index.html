@@ -16,11 +16,18 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="emailStep">
     <h2>Email Verification</h2>
     <input type="email" id="email" placeholder="Enter your email">
-    <button onclick="sendEmail()">Send Verification Email</button>
+    <button onclick="sendEmail()">Send Verification Code</button>
     <p id="message"></p>
+</div>
+
+<div class="container hidden" id="codeStep">
+    <h2>Enter Verification Code</h2>
+    <input type="text" id="code" placeholder="Enter 6-digit code">
+    <button onclick="verifyCode()">Verify</button>
+    <p id="codeMessage"></p>
 </div>
 
 <script>
@@ -28,23 +35,41 @@
         emailjs.init("cRP4ovnb5IL3SxrkQ"); // Your EmailJS Public Key
     })();
 
+    let generatedCode = ""; // Stores the 6-digit code
+    let userEmail = ""; // Stores the entered email
+
     function sendEmail() {
-        const email = document.getElementById("email").value;
-        if (!email) {
+        userEmail = document.getElementById("email").value;
+        if (!userEmail) {
             showMessage("Please enter an email!", "error");
             return;
         }
 
-        const verificationLink = `https://waliko2900.github.io/email-verification/verify.html?email=${encodeURIComponent(email)}`;
+        generatedCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit code
 
         const templateParams = {
-            to_email: email,
-            verification_link: verificationLink
+            to_email: userEmail,  // Send to the entered email
+            verification_code: generatedCode
         };
 
         emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
-            .then(() => showMessage("Verification email sent!", "success"))
+            .then(() => {
+                showMessage("Verification code sent to your email!", "success");
+                document.getElementById("emailStep").classList.add("hidden");
+                document.getElementById("codeStep").classList.remove("hidden");
+            })
             .catch(() => showMessage("Failed to send email!", "error"));
+    }
+
+    function verifyCode() {
+        const enteredCode = document.getElementById("code").value;
+        if (enteredCode == generatedCode) {
+            document.getElementById("codeMessage").innerText = "✅ Email Verified!";
+            document.getElementById("codeMessage").className = "success";
+        } else {
+            document.getElementById("codeMessage").innerText = "❌ Incorrect Code!";
+            document.getElementById("codeMessage").className = "error";
+        }
     }
 
     function showMessage(msg, type) {
