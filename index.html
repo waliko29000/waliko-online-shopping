@@ -3,81 +3,541 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Verification</title>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <title>Waliko Unique Fashion</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        input, button { width: 100%; padding: 10px; margin: 5px 0; }
-        .hidden { display: none; }
-        .success { color: green; }
-        .error { color: red; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3a3a3c;
+            color: white;
+            width: 100%;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+        header .profile {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        header h1 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+        header p {
+            font-size: 0.9em;
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            white-space: nowrap;
+            padding: 8px 12px;
+            background-color: #555;
+            border-radius: 5px;
+        }
+        nav a:hover {
+            text-decoration: none;
+            background-color: #777;
+        }
+        .content {
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: none;
+            flex-grow: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Adjust heading margins within content sections to reduce top spacing */
+        .content h1:first-child,
+        .content h2:first-child,
+        .content h3:first-child {
+            margin-top: 0;
+        }
+
+        /* Styling for all H3 elements within content for consistency */
+        .content h3 {
+            font-size: 1.2em; /* Adjust font size to your preference for H3s */
+            margin-top: 1.5em; /* Ensure some spacing between H3s */
+            margin-bottom: 0.5em;
+        }
+        /* Specific adjustment for the very first H3 in a content section */
+        .content h3:first-child {
+             margin-top: 0; /* Override margin-top for the first H3 to remove initial gap */
+        }
+
+
+        .intro {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .shop-now {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .shop-now a {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .shop-now a:hover {
+            background-color: #218838;
+        }
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .product {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        footer {
+            background-color: #3a3a3c;
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+            width: 100%;
+            margin-top: auto;
+            box-sizing: border-box;
+        }
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .feedback-form input, .feedback-form textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .feedback-form button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .feedback-form button:hover {
+            background-color: #0056b3;
+        }
+        .testimonial {
+            margin-top: 20px;
+        }
+        .shop-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .shop-links a {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            text-align: center;
+            flex-grow: 1;
+            max-width: 180px;
+            box-sizing: border-box;
+        }
+        .shop-links a:hover {
+            background-color: #0056b3;
+        }
+
+        /* --- Media Queries for Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+            header .profile {
+                flex-direction: column;
+                margin-bottom: 10px;
+            }
+            header img {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            nav {
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+            }
+            nav a {
+                padding: 7px 10px;
+                font-size: 0.9em;
+                flex-grow: 1;
+                max-width: 150px;
+            }
+            .content {
+                padding: 15px;
+            }
+            .product {
+                width: 100%;
+                max-width: 300px;
+            }
+            .shop-links {
+                gap: 8px;
+            }
+            .shop-links a {
+                width: auto;
+                flex-basis: calc(50% - 16px);
+                max-width: none;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.2em;
+            }
+            header p {
+                font-size: 0.8em;
+            }
+            nav {
+                gap: 6px;
+            }
+            nav a {
+                font-size: 0.8em;
+                padding: 6px 8px;
+                flex-basis: calc(50% - 12px);
+            }
+            .shop-now a {
+                font-size: 15px;
+                padding: 8px 15px;
+            }
+            .shop-links a {
+                font-size: 14px;
+                padding: 7px 10px;
+                flex-basis: 100%;
+                max-width: 250px;
+            }
+        }
     </style>
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content');
+            sections.forEach(section => section.style.display = 'none');
+
+            // Show the selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+        }
+
+        function submitFeedback(event) {
+            event.preventDefault(); // Prevent form submission
+            const feedbackInput = document.getElementById('feedback-input').value;
+            const feedbackDisplay = document.getElementById('feedback-display');
+            if (feedbackInput) {
+                // For a real application, you'd send this to a server
+                feedbackDisplay.innerHTML += `<p><strong>You:</strong> ${feedbackInput}</p>`;
+                document.getElementById('feedback-input').value = ''; // Clear input
+                alert('Feedback submitted successfully!');
+            } else {
+                alert('Please enter your feedback.');
+            }
+        }
+
+        // Automatically show the intro section on load
+        window.onload = () => {
+            showSection('intro');
+        };
+    </script>
 </head>
 <body>
+    <header>
+        <div class="profile">
+            <img src="profile.jpg.jpg" alt="Profile Picture">
+            <div>
+                <h1>Waliko Online Shopping</h1>
+                <p>Unleash Your Unique Style!</p>
+            </div>
+        </div>
+        <nav>
+            <a href="javascript:void(0)" onclick="showSection('about')">About Us</a>
+            <a href="javascript:void(0)" onclick="showSection('terms and conditions')">Terms of Service</a>
+            <a href="javascript:void(0)" onclick="showSection('testimonials')">Privacy Info</a>
+            <a href="javascript:void(0)" onclick="showSection('feedback')">Feedback</a>
+            <a href="javascript:void(0)" onclick="showSection('contact')">Contact Us</a>
+            <a href="javascript:void(0)" onclick="showSection('shop')">Go to Shop</a>
+        </nav>
+    </header>
 
-<div class="container" id="emailStep">
-    <h2>Email Verification</h2>
-    <input type="email" id="email" placeholder="Enter your email">
-    <button onclick="sendEmail()">Send Verification Code</button>
-    <p id="message"></p>
-</div>
+    <div class="content" id="intro">
+        <section class="intro">
+            <h3>Welcome to Waliko Online Shopping</h3>
+            <p>Discover unique styles that suit your personality.</p>
+        </section>
 
-<div class="container hidden" id="codeStep">
-    <h2>Enter Verification Code</h2>
-    <input type="text" id="code" placeholder="Enter 6-digit code">
-    <button onclick="verifyCode()">Verify</button>
-    <p id="codeMessage"></p>
-</div>
+        <section class="shop-now">
+            <h3>Shop Now</h3>
+            <a href="javascript:void(0)" onclick="showSection('shop')">Go to Shop</a>
+        </section>
+    </div>
 
-<script>
-    (function() {
-        emailjs.init("cRP4ovnb5IL3SxrkQ"); // Your EmailJS Public Key
-    })();
+    <div class="content" id="terms and conditions">
+        <h3>Terms of Service</h3>
+        <p>Welcome to Waliko Online Shopping! By accessing or using our website and services, you agree to comply with and be bound by these Terms of Service, as well as our Privacy Policy. Please read these terms carefully before using our services.</p>
 
-    let generatedCode = ""; // Stores the 6-digit code
-    let userEmail = ""; // Stores the entered email
+        <h3>1. Acceptance of Terms</h3>
+        <p>By accessing or using Waliko Online Shopping (the "Site"), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree to these terms, you must not access or use the Site.</p>
 
-    function sendEmail() {
-        userEmail = document.getElementById("email").value;
-        if (!userEmail) {
-            showMessage("Please enter an email!", "error");
-            return;
-        }
+        <h3>2. Modifications to Terms</h3>
+        <p>We may update, modify, or revise these Terms of Service at any time, and any such changes will be effective upon posting on the Site. We recommend reviewing the Terms of Service periodically for any updates. Your continued use of the Site constitutes acceptance of any modifications to these terms.</p>
 
-        generatedCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit code
+        <h3>3. User Registration</h3>
+        <p>To access certain features of the Site, you may be required to create an account. You agree to provide accurate, current, and complete information during the registration process and to keep this information up to date. You are responsible for maintaining the confidentiality of your account and password, and you agree to notify us immediately of any unauthorized use of your account.</p>
 
-        const templateParams = {
-            to_email: userEmail,  // This ensures the email is sent to the user
-            verification_code: generatedCode
-        };
+        <h3>4. Account Security</h3>
+        <p>You are responsible for maintaining the confidentiality of your account and all activities under your account. Waliko Online Shopping cannot and will not be liable for any loss or damage arising from your failure to comply with this security obligation.</p>
 
-        emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
-            .then(() => {
-                showMessage("Verification code sent to your email!", "success");
-                document.getElementById("emailStep").classList.add("hidden");
-                document.getElementById("codeStep").classList.remove("hidden");
-            })
-            .catch((error) => showMessage("Failed to send email. Error: " + error.text, "error"));
-    }
+        <h3>5. Product Information</h3>
+        <p>We strive to ensure the accuracy of all product descriptions, pricing, and images on our website. However, we do not guarantee that the content is always 100% accurate, complete, or current. In the event of a discrepancy in pricing or product details, we reserve the right to correct such errors and provide you with a refund or an alternative solution if necessary.</p>
 
-    function verifyCode() {
-        const enteredCode = document.getElementById("code").value;
-        if (enteredCode == generatedCode) {
-            document.getElementById("codeMessage").innerText = "✅ Email Verified!";
-            document.getElementById("codeMessage").className = "success";
-        } else {
-            document.getElementById("codeMessage").innerText = "❌ Incorrect Code!";
-            document.getElementById("codeMessage").className = "error";
-        }
-    }
+        <h3>6. Ordering and Payment</h3>
+        <p>When you place an order through the Site, you are making an offer to purchase products under the terms and conditions set forth. All orders are subject to acceptance and availability. We accept payments through secure payment gateways, including M-Pesa and credit/debit cards. You agree to provide valid payment information and authorize us to charge your account for the total amount of the order, including shipping and taxes, where applicable.</p>
 
-    function showMessage(msg, type) {
-        const messageEl = document.getElementById("message");
-        messageEl.innerText = msg;
-        messageEl.className = type;
-    }
-</script>
+        <h3>7. Shipping and Delivery</h3>
+        <p>We strive to ship your orders as quickly as possible. However, shipping times may vary based on your location, availability of the product, and other factors. We do not guarantee any specific delivery dates. All orders are processed and shipped in accordance with our shipping policy.</p>
 
+        <h3>8. Returns and Refunds</h3>
+        <p>Our return and refund policy allows you to return products within 14 days of receiving them if they are in their original, unused condition. Certain items may be exempt from this policy due to hygiene reasons or other conditions. Please review our full <a href="#">Return and Refund Policy</a> for more information on how to process returns or request a refund.</p>
+
+        <h3>9. Limitation of Liability</h3>
+        <p>Waliko Online Shopping will not be liable for any indirect, incidental, consequential, or punitive damages arising out of the use or inability to use our website or products, even if we have been advised of the possibility of such damages. Our total liability will be limited to the total amount paid for the order in question.</p>
+
+        <h3>10. Privacy Policy</h3>
+        <p>Your privacy is important to us. By using our services, you agree to the terms of our <a href="#">Privacy Policy</a>, which outlines how we collect, use, and protect your personal information.</p>
+
+        <h3>11. Prohibited Conduct</h3>
+        <p>You agree not to engage in the following activities while using the Site:</p>
+        <ul>
+            <li>Engaging in fraudulent, illegal, or deceptive conduct;</li>
+            <li>Interfering with or disrupting the integrity or performance of the Site;</li>
+            <li>Uploading harmful content, such as viruses or malicious software;</li>
+            <li>Impersonating another person or entity;</li>
+            <li>Using the Site for any unlawful purpose.</li>
+        </ul>
+
+        <h3>12. Intellectual Property</h3>
+        <p>All content on the Site, including text, graphics, logos, images, and software, is the property of Waliko Online Shopping or its content suppliers and is protected by copyright, trademark, and other intellectual property laws. You may not use, reproduce, or distribute any content from the Site without express permission from Waliko Online Shopping.</p>
+
+        <h3>13. Indemnification</h3>
+        <p>You agree to indemnify and hold harmless Waliko Online Shopping, its affiliates, officers, employees, and agents from any claims, losses, damages, liabilities, or expenses (including legal fees) arising from your use of the Site, violation of these Terms of Service, or infringement of any rights of another party.</p>
+
+        <h3>14. Governing Law</h3>
+        <p>These Terms of Service shall be governed by and construed in accordance with the laws of Kenya. Any disputes related to these Terms of Service shall be resolved in the courts of Kenya.</p>
+
+        <h3>15. Termination</h3>
+        <p>We reserve the right to suspend or terminate your account or access to the Site at any time, without notice, for any reason, including if you violate these Terms of Service. Upon termination, all provisions of these terms that by their nature should survive termination will remain in effect.</p>
+
+        <h3>16. Contact Us</h3>
+        <p>If you have any questions about these Terms of Service or our practices, please contact us at:</p>
+        <p>Email: <a href="mailto:support@walikoshop.com">support@walikoshop.com</a></p>
+        <p>Phone: +254729177741</p>
+    </div>
+
+
+    <div class="content" id="about">
+        <h3>About Us</h3>
+
+<p>Welcome to Waliko Online Shopping, your trusted destination for a wide range of high-quality products at affordable prices. Our mission is to provide customers with a seamless shopping experience, offering everything from electronics and clothing to home essentials and groceries, all in one convenient online store.</p>
+
+        <h3>Our Story</h3>
+<p>Founded in 2016, Waliko Online Shopping started with a simple goal: to make shopping easier, faster, and more accessible for everyone. Over the years, we’ve grown into a trusted online retailer known for offering a diverse selection of products, exceptional customer service, and fast delivery times. Our team is dedicated to ensuring that each shopping experience is enjoyable and stress-free.</p>
+
+        <h3>What We Offer</h3>
+<p>At Waliko Online Shopping, we take pride in offering a wide variety of products across multiple categories, including:</p>
+<ul>
+    <li><strong>Electronics:</strong> From the latest smartphones and gadgets to home appliances.</li>
+    <li><strong>Clothing and Fashion:</strong> Trendy apparel for men, women, and children.</li>
+    <li><strong>Home Essentials:</strong> Everything you need to make your home comfortable and stylish.</li>
+    <li><strong>Groceries:</strong> Conveniently shop for your favorite food items, drinks, and household essentials.</li>
+</ul>
+
+        <h3>Our Commitment</h3>
+<p>At Waliko Online Shopping, customer satisfaction is our top priority. We are committed to providing high-quality products, reliable service, and secure online shopping. Whether you’re shopping for everyday essentials or special gifts, we aim to offer a stress-free, enjoyable shopping experience from start to finish.</p>
+
+        <h3>Why Choose Us?</h3>
+<ul>
+    <li><strong>Wide Range of Products:</strong> We offer everything you need in one place, making your shopping experience simple and efficient.</li>
+    <li><strong>Secure Payment Options:</strong> We prioritize your security, offering multiple safe payment methods, including M-Pesa and credit/debit cards.</li>
+    <li><strong>Fast and Reliable Delivery:</strong> We ensure your orders are delivered quickly and securely to your door.</li>
+    <li><strong>Customer Support:</strong> Our friendly and professional customer service team is always ready to assist you with any inquiries or issues.</li>
+</ul>
+
+        <h3>Our Vision</h3>
+<p>Our vision is to become the go-to online shopping destination for all your needs. We aim to build lasting relationships with our customers by offering a personalized, high-quality shopping experience and delivering excellent value on every purchase.</p>
+
+        <h3>Contact Us</h3>
+<p>We'd love to hear from you! Whether you have questions, suggestions, or just want to share your feedback, please don't hesitate to reach out to us:</p>
+<p>Email: support@walikoshop.com</p>
+<p>Phone: +254729177741</p>
+    </div>
+
+    <div class="content" id="testimonials">
+        <h3>Privacy Information for Waliko Online Shopping</h3>
+
+        <p>At Waliko Online Shopping, we respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit or make purchases from our online store. By using our website, you agree to the terms outlined in this policy.</p>
+
+        <h3>1. Introduction</h3>
+        <p>We prioritize the privacy of our customers. This document outlines how we collect, store, and use your personal information while ensuring the highest standards of data protection in line with applicable laws and regulations.</p>
+
+        <h3>2. Information We Collect</h3>
+        <p>To provide a seamless shopping experience, we collect two main types of information:</p>
+        <ul>
+            <li><strong>Personal Information:</strong> This includes your name, email address, shipping and billing addresses, phone number, and payment information. We collect this information when you register an account, place an order, or engage with our services.</li>
+            <li><strong>Non-Personal Information:</strong> This includes data such as your Browse history, device information, and IP address, which help us improve your shopping experience and optimize our website’s performance.</li>
+        </ul>
+
+        <h3>3. How We Use Your Information</h3>
+        <p>We use your information for several purposes, including:</p>
+        <ul>
+            <li><strong>Order Processing:</strong> To handle and fulfill your orders, including payment processing and order updates.</li>
+            <li><strong>Customer Support:</strong> To provide assistance with your orders, respond to your inquiries, and resolve any issues that may arise.</li>
+            <li><strong>Marketing Communications:</i></strong> To send you offers, promotions, and updates related to Waliko Online Shopping. You can opt out of these communications at any time.</li>
+        </ul>
+
+        <h3>4. Data Security</h3>
+        <p>We take your privacy seriously and implement stringent security measures to protect your personal information. These include encryption, secure payment gateways, and other protective measures to prevent unauthorized access and ensure the safety of your data.</p>
+
+        <h3>5. Sharing Your Information</h3>
+        <p>We do not sell or rent your personal information to third parties. However, we may share your data with trusted third-party service providers who assist us in delivering our services, such as payment processors, delivery companies, and marketing partners. These parties are bound by strict privacy agreements.</p>
+
+        <h3>6. Your Rights and Choices</h3>
+        <p>As a customer, you have the right to:</p>
+        <ul>
+            <li>Access and update your personal information.</li>
+            <li>Request the deletion of your personal data, subject to certain legal exceptions.</li>
+            <li>Opt-out of receiving promotional emails and communications.</li>
+        </ul>
+
+        <h3>7. Cookies and Tracking Technologies</h3>
+        <p>We use cookies to enhance your experience on our website. Cookies help us remember your preferences, improve site navigation, and gather analytical data. You can manage your cookie preferences in your browser settings at any time.</p>
+
+        <h3>8. Changes to This Privacy Policy</h3>
+        <p>We may update this privacy policy from time to time to reflect changes in our practices or for legal reasons. Any changes will be posted on this page with an updated effective date. We encourage you to review this policy periodically to stay informed about how we protect your privacy.</p>
+
+        <h3>9. Contact Us</h3>
+        <p>If you have any questions or concerns about this privacy policy or how we handle your personal information, please feel free to contact us:</p>
+        <p>Email: privacy@walikoshop.com</p>
+        <p>Phone: +254729177741</p>
+    </div>
+
+    <div class="content" id="feedback">
+        <section>
+            <h3>Feedback</h3>
+            <form class="feedback-form" onsubmit="submitFeedback(event)">
+                <textarea id="feedback-input" placeholder="Enter your feedback..."></textarea>
+                <button type="submit">Submit Feedback</button>
+            </form>
+            <div id="feedback-display"></div>
+        </section>
+    </div>
+
+    <div class="content" id="contact">
+        <h3>Contact Us</h3>
+
+        <p>We’re here to help! Feel free to reach out for any questions, feedback, or support you need. Our dedicated team is always ready to assist you and ensure you have the best experience with us.</p>
+
+        <p><strong>Customer Support:</strong> For any inquiries, concerns, or assistance with your orders, email us at <a href="mailto:[MK@gmail.com]">[Waliko@gmail.com]</a>. We aim to respond within 24 hours.</p>
+
+        <p><strong>Phone Support:</strong> Speak directly with one of our customer care representatives by calling us at <a href="tel:+254722507996">0729177741</a> Our support hours are Monday to Friday, 9:00 AM to 6:00 PM.</p>
+
+        <p><strong>Mailing Address:</strong> You can also reach us by mail at our headquarters:<br>
+        [235Fashion Street]<br>
+        [Garissa County, 70100]<br>
+        [Kenya]</p>
+
+        <p><strong>Social Media:</strong> Stay connected! Follow us on social media for the latest updates, new arrivals, and special promotions. Reach out via direct message, and we’ll get back to you promptly!</p>
+        <ul>
+            <li><a href="https://www.facebook.com/mkuniquefashion">Facebook</a></li>
+            <li><a href="https://www.instagram.com/mkuniquefashion">Instagram</a></li>
+            <li><a href="https://www.twitter.com/mkuniquefashion">Twitter</a></li>
+            <li><a href="https://www.linkedin.com/company/mkuniquefashion">LinkedIn</a></li>
+        </ul>
+
+        <p><strong>Business Inquiries:</strong> For partnerships, collaborations, or wholesale inquiries, please contact us at <a href="mailto:[YourBusinessEmail@yourdomain.com]">[Waliko@.com]</a>. We’re excited to explore new opportunities together!</p>
+
+        <p><strong>FAQ:</strong> Check out our <a href="STUDENT MANAGEMENT.html">Frequently Asked Questions</a> page for quick answers to common questions about orders, shipping, returns, and more.</p>
+    </div>
+
+    <div class="content" id="shop" style="display: none;">
+        <h3>Shop</h3>
+        <p>Select your category:</p>
+        <div class="shop-links">
+            <a href="for men.html">Shop for Men</a>
+            <a href="for women.html">Shop for Women</a>
+            <a href="#">Baby Products</a>
+            <a href="Electronics - Copy.html">Electronics</a>
+            <a href="#">Groceries</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Waliko Online Shopping. All rights reserved.
+    </footer>
 </body>
 </html>
