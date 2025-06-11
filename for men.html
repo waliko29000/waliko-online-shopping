@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waliko Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .header {
+            background-color: hsl(240, 4%, 5%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: block;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .hamburger-menu div {
+            width: 30px;
+            height: 4px;
+            background-color: white;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        /* Rotate first bar */
+        .change .bar1 {
+            transform: translate(0, 10px) rotate(-45deg);
+        }
+
+        /* Fade out the middle bar */
+        .change .bar2 {
+            opacity: 0;
+        }
+
+        /* Rotate last bar */
+        .change .bar3 {
+            transform: translate(0, -10px) rotate(45deg);
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: hsl(240, 4%, 5%);
+            position: fixed;
+            left: -250px; /* Initially hidden */
+            top: 0;
+            padding-top: 60px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 15px 20px;
+            margin: 5px 0;
+            transition: background-color 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Overlay for when sidebar/cart is open */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .product {
+            border: 1px solid #fc5e02;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.1em;
+            margin: 10px 0 5px;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Add to Basket button styling (medium size) */
+        .product button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background-color 0.3s;
+            width: calc(100% - 20px);
+            max-width: 200px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .product button:hover {
+            background-color: #0056b3;
+        }
+
+        .notification {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+            font-size: 0.8em;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .basket-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            transition: opacity 0.3s, visibility 0.3s; /* Smooth hide/show */
+        }
+
+        /* Hide basket icon when cart is open */
+        .basket-icon.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none; /* Make it unclickable when hidden */
+        }
+
+        .basket-icon:hover {
+            background-color: #ff4500;
+        }
+
+        .basket-icon i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .basket-count {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 50%;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .cart {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Initially hidden off-screen */
+            width: 85%;
+            max-width: 350px;
+            height: 100%;
+            background-color: #f1f1f1;
+            border-left: 1px solid #fc5e02;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            padding: 15px; /* Consistent padding for the whole cart container */
+            box-sizing: border-box; /* Include padding in the element's total width and height */
+        }
+
+        .cart.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 0 0 10px 0; /* Adjusted padding as main cart now has padding */
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .cart-header h2 {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 1.4em;
+        }
+
+        /* Cart close button style */
+        .cart-close-btn {
+            position: absolute;
+            top: 0; /* Adjusted relative to cart-header content */
+            right: 0; /* Adjusted relative to cart-header content */
+            font-size: 1.8em;
+            color: #555;
+            cursor: pointer;
+            z-index: 10;
+            transition: color 0.2s;
+        }
+
+        .cart-close-btn:hover {
+            color: #dc3545;
+        }
+
+        #scrollable-cart-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0; /* No extra padding here, handled by main .cart */
+            margin-top: 15px; /* Space between header and first item/total */
+            margin-bottom: 0; /* No margin below if button is part of the same flex row */
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-items {
+            /* This div now holds the actual product item divs */
+            /* No margin-bottom here, it's now applied to #cart-summary-scrollable */
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .cart-item:last-of-type {
+            margin-bottom: 0; /* No bottom margin on the last item */
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        .cart-item p {
+            margin: 0;
+            font-size: 0.9em;
+            flex-grow: 1;
+        }
+
+        /* Remove button inside cart item */
+        .cart-item button {
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 0.75em;
+            white-space: nowrap;
+            margin-left: 10px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item button:hover {
+            background-color: #c82333;
+        }
+
+        #cart-summary-scrollable {
+            margin-top: 20px; /* Space from last cart item */
+            padding-top: 15px; /* Space from the border */
+            border-top: 1px solid #ddd;
+            display: flex; /* Make it a flex container */
+            justify-content: space-between; /* Space total and button */
+            align-items: center; /* Vertically align them */
+            flex-shrink: 0;
+        }
+
+        #cart-total {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin: 0; /* Remove existing margin */
+        }
+
+        .paynow-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px; /* Adjusted padding for inline appearance */
+            cursor: pointer;
+            font-size: 1em; /* Adjusted font size */
+            transition: background-color 0.3s;
+            width: auto; /* Allow button to size to content */
+            margin: 0; /* Remove existing margin */
+            flex-shrink: 0; /* Prevent button from shrinking */
+        }
+
+        .paynow-button:hover {
+            background-color: #218838;
+        }
+
+        /* Modal Popup Styling (remains the same) */
+        #payNowModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-size: 1.3em;
+            color: #333;
+        }
+
+        .modal-content p {
+            margin: 15px 0;
+            font-size: 1em;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .modal-content button {
+            margin-top: 15px;
+            width: auto;
+            padding: 10px 20px;
+            display: inline-block;
+            margin: 0 8px;
+        }
+
+        .modal-content button:first-of-type {
+            background-color: #28a745;
+        }
+
+        .modal-content button:first-of-type:hover {
+            background-color: #218838;
+        }
+
+        .modal-content button:last-of-type {
+            background-color: #6c757d;
+        }
+
+        .modal-content button:last-of-type:hover {
+            background-color: #5a6268;
+        }
+
+        /* Media Queries for responsiveness */
+        @media (min-width: 768px) {
+            .hamburger-menu {
+                display: none;
+            }
+
+            #sidebar {
+                position: static;
+                width: 250px;
+                padding-top: 20px;
+                box-shadow: none;
+                left: 0;
+            }
+
+            .header {
+                justify-content: center;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                padding: 20px;
+            }
+
+            .basket-icon {
+                top: 20px;
+                right: 20px;
+                bottom: auto;
+                width: 50px;
+                height: 50px;
+                /* No hide class on desktop, it sits beside header */
+            }
+
+            .basket-icon i {
+                font-size: 22px;
+            }
+
+            .cart {
+                top: 60px;
+                right: 10px;
+                width: 300px;
+                height: 80%;
+                border-left: 1px solid #fc5e02;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="hamburger-menu" onclick="toggleMenu(this)">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+        <h1>Waliko Men's Fashion</h1>
+    </div>
+
+    <div id="sidebar">
+        <a href="fashion_registered.html">Account Details</a>
+        <a href="#">Pending Payments</a>
+        <a href="#">User Details</a>
+    </div>
+
+    <div class="overlay" onclick="closeAllMenus()"></div>
+
+    <div class="basket-icon" id="basket-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-basket"></i>
+        <div id="cart-count" class="basket-count">0</div>
+    </div>
+
+    <div class="cart" id="cart">
+        <div class="cart-header">
+            <span class="cart-close-btn" onclick="closeCart()">&times;</span>
+            <h2>Shopping Basket</h2>
+        </div>
+        <div id="scrollable-cart-content">
+            <div id="cart-items"></div>
+            <div id="cart-summary-scrollable">
+                <div id="cart-total">Total: KSh 0</div>
+                <button class="paynow-button" onclick="payNow()">Pay Now</button>
+            </div>
+        </div>
+        </div>
+
+    <div class="product-grid" id="product-grid"></div>
+
+    <div id="payNowModal">
+        <div class="modal-content">
+            <h2>Payment Confirmation</h2>
+            <p>Are you sure you want to proceed with the payment? Login to proceed.</p>
+            <button onclick="proceedToPayment()">Yes</button>
+            <button onclick="closeModal()">No</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to close both sidebar and cart
+        function closeAllMenus() {
+            const sidebar = document.getElementById('sidebar');
+            const cartElement = document.getElementById('cart');
+            const overlay = document.querySelector('.overlay');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('change');
+            }
+            if (cartElement.classList.contains('open')) {
+                cartElement.classList.remove('open');
+                basketIcon.classList.remove('hide'); // Show basket icon when cart closes
+            }
+            overlay.classList.remove('active'); // Hide overlay
+        }
+
+        // Toggle Sidebar Visibility
+        function toggleMenu(x) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            const cartElement = document.getElementById('cart');
+            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+
+            // Close cart if it's open
+            if (cartElement.classList.contains('open')) {
+                cartElement.classList.remove('open');
+                basketIcon.classList.remove('hide'); // Show basket icon when cart closes
+                overlay.classList.remove('active');
+            }
+
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+            if (x) {
+                x.classList.toggle("change");
+            }
+        }
+
+        // Close Cart function
+        function closeCart() {
+            const cartElement = document.getElementById('cart');
+            const overlay = document.querySelector('.overlay');
+            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+
+            cartElement.classList.remove('open');
+            basketIcon.classList.remove('hide'); // Show basket icon when cart closes
+            overlay.classList.remove('active');
+        }
+
+        const products = Array.from({ length: 60 }, (_, i) => ({
+            name: `Product ${i + 1}`,
+            img: `product${i + 1}.jpg`,
+            price: getPrice(i)
+        }));
+
+        function getPrice(index) {
+            const storedPrice = localStorage.getItem(`productPrice${index}`);
+            if (storedPrice) {
+                return parseInt(storedPrice, 10);
+            } else {
+                const price = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
+                localStorage.setItem(`productPrice${index}`, price);
+                return price;
+            }
+        }
+
+        products.forEach((product, index) => {
+            const productGrid = document.getElementById("product-grid");
+            const productElement = document.createElement("div");
+            productElement.classList.add("product");
+            productElement.innerHTML = `
+                <img src="${product.img}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p class="product-price">KSh ${product.price}</p>
+                <p>Description of ${product.name}. A popular choice.</p>
+                <button onclick="addToCart('${product.name}', ${product.price}, '${product.img}', ${index})">Add to Basket</button>
+                <div id="notification-${index}" class="notification">Successfully added to basket!</div>
+            `;
+            productGrid.appendChild(productElement);
+        });
+
+        let cart = [];
+        let cartCount = 0;
+
+        function toggleCart() {
+            const cartElement = document.getElementById("cart");
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+
+            // Close sidebar if it's open
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('change');
+            }
+
+            cartElement.classList.toggle('open');
+
+            // Hide basket icon when cart is open, show it when closed
+            if (cartElement.classList.contains('open')) {
+                basketIcon.classList.add('hide');
+            } else {
+                basketIcon.classList.remove('hide');
+            }
+
+            // Activate overlay only if cart or sidebar is open
+            overlay.classList.toggle('active', cartElement.classList.contains('open') || sidebar.classList.contains('open'));
+        }
+
+        function addToCart(name, price, img, index) {
+            cart.push({ name, price, img });
+            cartCount++;
+            updateCartDisplay();
+            showNotification(index);
+        }
+
+        function showNotification(index) {
+            const notification = document.getElementById(`notification-${index}`);
+            notification.style.display = "block";
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 2000); // Hide after 2 seconds
+        }
+
+        function removeFromCart(index) {
+            if (index >= 0 && index < cart.length) {
+                cart.splice(index, 1);
+                cartCount--;
+                updateCartDisplay();
+            }
+        }
+
+        function updateCartDisplay() {
+            document.getElementById("cart-count").innerText = cartCount;
+            const cartItemsElement = document.getElementById("cart-items");
+            cartItemsElement.innerHTML = "";
+            let total = 0;
+            if (cart.length === 0) {
+                cartItemsElement.innerHTML = "<p>Your basket is empty.</p>";
+            } else {
+                cart.forEach((item, index) => {
+                    const cartItem = document.createElement("div");
+                    cartItem.classList.add("cart-item");
+                    cartItem.innerHTML = `<img src="${item.img}" alt="${item.name}">
+                                        <div>
+                                            <p><strong>${item.name}</strong></p>
+                                            <p>KSh ${item.price}</p>
+                                        </div>
+                                        <button onclick="removeFromCart(${index})">Remove</button>`;
+                    cartItemsElement.appendChild(cartItem);
+                    total += item.price;
+                });
+            }
+            document.getElementById("cart-total").innerText = `Total: KSh ${total}`; // Update total in cart
+        }
+
+        function payNow() {
+            const payNowModal = document.getElementById("payNowModal");
+            payNowModal.style.display = "flex";
+        }
+
+        function closeModal() {
+            const payNowModal = document.getElementById("payNowModal");
+            payNowModal.style.display = "none";
+        }
+
+        function proceedToPayment() {
+            // Redirect to fashion login
+            window.location.href = "fashion login.html";
+        }
+
+        // Initial cart display update
+        updateCartDisplay();
+    </script>
+
+</body>
+</html>
