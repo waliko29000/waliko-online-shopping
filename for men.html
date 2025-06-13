@@ -73,6 +73,7 @@
             transition: left 0.3s ease;
             z-index: 1000;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            overflow-y: auto; /* Added for scrollable content */
         }
 
         #sidebar.open {
@@ -383,8 +384,8 @@
             background-color: #218838;
         }
 
-        /* Modal Popup Styling (remains the same) */
-        #payNowModal {
+        /* Modal Popup Styling */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -430,20 +431,28 @@
             margin: 0 8px;
         }
 
-        .modal-content button:first-of-type {
+        .modal-content .confirm-btn {
             background-color: #28a745;
         }
 
-        .modal-content button:first-of-type:hover {
+        .modal-content .confirm-btn:hover {
             background-color: #218838;
         }
 
-        .modal-content button:last-of-type {
+        .modal-content .cancel-btn {
             background-color: #6c757d;
         }
 
-        .modal-content button:last-of-type:hover {
+        .modal-content .cancel-btn:hover {
             background-color: #5a6268;
+        }
+
+        .modal-content .delete-btn { /* Specific style for delete button */
+            background-color: #dc3545;
+        }
+
+        .modal-content .delete-btn:hover {
+            background-color: #c82333;
         }
 
         /* Media Queries for responsiveness */
@@ -509,11 +518,24 @@
     </div>
 
     <div id="sidebar">
-        <a href="#">Personal Information</a>
-        <a href="#">Payment Statements</a>
-        <a href="#">Change Password</a>
-        <a href="#"></a>
-        
+        <a href="fashion login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="fashion register.html"><i class="fas fa-user-plus"></i> Register</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-user-circle"></i> My Profile</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-key"></i> Change Password</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-address-book"></i> Address Book</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-credit-card"></i> Payment Methods</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-history"></i> Order History</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-truck"></i> Order Tracking</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-undo"></i> Returns & Refunds</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="#" onclick="handleAccountAction(event, 'deactivate')"><i class="fas fa-user-slash"></i> Deactivate Account</a>
+        <a href="#" onclick="handleAccountAction(event, 'delete')"><i class="fas fa-user-times"></i> Delete Account</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Log Out</a>
     </div>
 
     <div class="overlay" onclick="closeAllMenus()"></div>
@@ -535,27 +557,50 @@
                 <button class="paynow-button" onclick="payNow()">Pay Now</button>
             </div>
         </div>
-        </div>
+    </div>
 
     <div class="product-grid" id="product-grid"></div>
 
-    <div id="payNowModal">
+    <div id="payNowModal" class="modal">
         <div class="modal-content">
             <h2>Payment Confirmation</h2>
             <p>Are you sure you want to proceed with the payment? Login to proceed.</p>
-            <button onclick="proceedToPayment()">Yes</button>
-            <button onclick="closeModal()">No</button>
+            <button class="confirm-btn" onclick="proceedToPayment()">Yes</button>
+            <button class="cancel-btn" onclick="closeModal('payNowModal')">No</button>
+        </div>
+    </div>
+
+    <div id="deactivateAccountModal" class="modal">
+        <div class="modal-content">
+            <h2>Deactivate Account</h2>
+            <p>Are you sure you want to deactivate your account? You can reactivate it later by logging back in.</p>
+            <button class="confirm-btn" onclick="deactivateAccountConfirmed()">Deactivate</button>
+            <button class="cancel-btn" onclick="closeModal('deactivateAccountModal')">Cancel</button>
+        </div>
+    </div>
+
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <h2>Delete Account Permanently</h2>
+            <p><strong>Warning:</strong> Deleting your account is permanent and cannot be undone. All your data will be removed.</p>
+            <p>Are you absolutely sure you want to delete your account?</p>
+            <button class="delete-btn" onclick="deleteAccountConfirmed()">Delete Permanently</button>
+            <button class="cancel-btn" onclick="closeModal('deleteAccountModal')">Cancel</button>
         </div>
     </div>
 
     <script>
-        // Function to close both sidebar and cart
+        // For demonstration, assume user is NOT logged in.
+        // In a real application, this would be determined by session/token.
+        let isLoggedIn = false; 
+
+        // Function to close both sidebar and cart and any open modals
         function closeAllMenus() {
             const sidebar = document.getElementById('sidebar');
             const cartElement = document.getElementById('cart');
             const overlay = document.querySelector('.overlay');
             const hamburger = document.querySelector('.hamburger-menu');
-            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+            const basketIcon = document.getElementById('basket-icon');
 
             if (sidebar.classList.contains('open')) {
                 sidebar.classList.remove('open');
@@ -563,8 +608,14 @@
             }
             if (cartElement.classList.contains('open')) {
                 cartElement.classList.remove('open');
-                basketIcon.classList.remove('hide'); // Show basket icon when cart closes
+                basketIcon.classList.remove('hide');
+                overlay.classList.remove('active');
             }
+            // Close any open modals
+            closeModal('payNowModal');
+            closeModal('deactivateAccountModal');
+            closeModal('deleteAccountModal');
+
             overlay.classList.remove('active'); // Hide overlay
         }
 
@@ -573,12 +624,12 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.overlay');
             const cartElement = document.getElementById('cart');
-            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+            const basketIcon = document.getElementById('basket-icon');
 
             // Close cart if it's open
             if (cartElement.classList.contains('open')) {
                 cartElement.classList.remove('open');
-                basketIcon.classList.remove('hide'); // Show basket icon when cart closes
+                basketIcon.classList.remove('hide');
                 overlay.classList.remove('active');
             }
 
@@ -593,54 +644,429 @@
         function closeCart() {
             const cartElement = document.getElementById('cart');
             const overlay = document.querySelector('.overlay');
-            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+            const basketIcon = document.getElementById('basket-icon');
 
             cartElement.classList.remove('open');
-            basketIcon.classList.remove('hide'); // Show basket icon when cart closes
+            basketIcon.classList.remove('hide');
             overlay.classList.remove('active');
         }
 
-        const products = Array.from({ length: 60 }, (_, i) => ({
-            name: `Product ${i + 1}`,
-            img: `product${i + 1}.jpg`,
-            price: getPrice(i)
-        }));
+        // Function to show the alert and prevent default link behavior for non-functional links
+        function showAlertAndPreventDefault(event) {
+            alert('Please log in to access this feature.');
+            event.preventDefault(); // Prevent the default action of the link
+            closeAllMenus(); // Close sidebar after alert
+        }
 
-        function getPrice(index) {
-            const storedPrice = localStorage.getItem(`productPrice${index}`);
-            if (storedPrice) {
-                return parseInt(storedPrice, 10);
-            } else {
-                const price = Math.floor(Math.random() * (2500 - 1200 + 1)) + 1200;
-                localStorage.setItem(`productPrice${index}`, price);
-                return price;
+        // Generic function to open a modal
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const overlay = document.querySelector('.overlay');
+            modal.style.display = 'flex';
+            overlay.classList.add('active');
+            closeAllMenusExceptModal(modalId); // Ensure other menus are closed
+        }
+
+        // Generic function to close a modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+            // Only deactivate overlay if no other modal or menu is open
+            const anyModalOpen = document.querySelector('.modal[style*="display: flex"]');
+            const sidebarOpen = document.getElementById('sidebar').classList.contains('open');
+            const cartOpen = document.getElementById('cart').classList.contains('open');
+            if (!anyModalOpen && !sidebarOpen && !cartOpen) {
+                document.querySelector('.overlay').classList.remove('active');
             }
         }
 
-        products.forEach((product, index) => {
-            const productGrid = document.getElementById("product-grid");
-            const productElement = document.createElement("div");
-            productElement.classList.add("product");
-            productElement.innerHTML = `
-                <img src="${product.img}" alt="${product.name}">
-                <h3>${product.name}</h3>
-                <p class="product-price">KSh ${product.price}</p>
-                <p>Description of ${product.name}. A popular choice.</p>
-                <button onclick="addToCart('${product.name}', ${product.price}, '${product.img}', ${index})">Add to Basket</button>
-                <div id="notification-${index}" class="notification">Successfully added to basket!</div>
-            `;
-            productGrid.appendChild(productElement);
-        });
-
-        let cart = [];
-        let cartCount = 0;
-
-        function toggleCart() {
-            const cartElement = document.getElementById("cart");
+        // Function to close all menus/modals except the currently open modal
+        function closeAllMenusExceptModal(modalId) {
             const sidebar = document.getElementById('sidebar');
-            const overlay = document.querySelector('.overlay');
+            const cartElement = document.getElementById('cart');
             const hamburger = document.querySelector('.hamburger-menu');
-            const basketIcon = document.getElementById('basket-icon'); // Get basket icon
+            const basketIcon = document.getElementById('basket-icon');
+
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('change');
+            }
+            if (cartElement.classList.contains('open')) {
+                cartElement.classList.remove('open');
+                basketIcon.classList.remove('hide');
+            }
+
+            // Close other modals if they are open
+            const allModals = document.querySelectorAll('.modal');
+            allModals.forEach(modal => {
+                if (modal.id !== modalId) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle account-related actions (Deactivate/Delete)
+        function handleAccountAction(event, actionType) {
+            event.preventDefault(); // Prevent default link behavior
+
+            if (!isLoggedIn) {
+                // If not logged in, show the login prompt
+                alert('Please log in to access this feature.');
+                closeAllMenus(); // Close sidebar after alert
+            } else {
+                // If logged in, proceed to show the respective modal
+                if (actionType === 'deactivate') {
+                    openModal('deactivateAccountModal');
+                } else if (actionType === 'delete') {
+                    openModal('deleteAccountModal');
+                }
+            }
+        }
+
+        // Show Pay Now Modal
+        function payNow() {
+            openModal('payNowModal');
+        }
+
+        // Simulate payment process
+        function proceedToPayment() {
+            alert('Redirecting to login page to proceed with payment...');
+            // In a real application, you would redirect to a login/payment gateway
+            window.location.href = "fashion login.html";
+            closeModal('payNowModal');
+        }
+
+        // Simulate Deactivate Account
+        function deactivateAccountConfirmed() {
+            alert('Your account has been deactivated. You can reactivate it by logging in again.');
+            // In a real application, you'd send a request to the server to deactivate the account
+            // and then potentially log the user out and redirect them to the login page.
+            window.location.href = "fashion login.html";
+            closeModal('deactivateAccountModal');
+        }
+
+        // Simulate Delete Account
+        function deleteAccountConfirmed() {
+            alert('Your account has been permanently deleted. We are sorry to see you go!');
+            // In a real application, you'd send a request to the server to permanently delete the account
+            // and then log the user out and redirect them to a confirmation or homepage.
+            window.location.href = "index.html"; // Redirect to homepage after deletion
+            closeModal('deleteAccountModal');
+        }
+
+
+        // --- EDIT YOUR PRODUCTS HERE ---
+        const products = [
+            {
+                name: "Product 1",
+                img: "product1.jpg",
+                price: 1300, // Example price
+                description: "good" // Add your description here
+            },
+            {
+                name: "Product 2",
+                img: "product2.jpg",
+                price: 2200,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 3",
+                img: "product3.jpg",
+                price: 1800,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 4",
+                img: "product4.jpg",
+                price: 2800,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 5",
+                img: "product5.jpg",
+                price: 1200,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 6",
+                img: "product6.jpg",
+                price: 950,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 7",
+                img: "product7.jpg",
+                price: 3500,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 8",
+                img: "product8.jpg",
+                price: 2000,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 9",
+                img: "product9.jpg",
+                price: 1750,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 10",
+                img: "product10.jpg",
+                price: 4000,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 11",
+                img: "product11.jpg",
+                price: 1600,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 12",
+                img: "product12.jpg",
+                price: 2300,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 13",
+                img: "product13.jpg",
+                price: 1950,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 14",
+                img: "product14.jpg",
+                price: 3100,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 15",
+                img: "product15.jpg",
+                price: 1050,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 16",
+                img: "product16.jpg",
+                price: 800,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 17",
+                img: "product17.jpg",
+                price: 3700,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 18",
+                img: "product18.jpg",
+                price: 2150,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 19",
+                img: "product19.jpg",
+                price: 1400,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 20",
+                img: "product20.jpg",
+                price: 4200,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 21",
+                img: "product21.jpg",
+                price: 1700,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 22",
+                img: "product22.jpg",
+                price: 2400,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 23",
+                img: "product23.jpg",
+                price: 2050,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 24",
+                img: "product24.jpg",
+                price: 3300,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 25",
+                img: "product25.jpg",
+                price: 1150,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 26",
+                img: "product26.jpg",
+                price: 900,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 27",
+                img: "product27.jpg",
+                price: 3800,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 28",
+                img: "product28.jpg",
+                price: 2250,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 29",
+                img: "product29.jpg",
+                price: 1650,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 30",
+                img: "product30.jpg",
+                price: 4500,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 31",
+                img: "product31.jpg",
+                price: 1850,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 32",
+                img: "product32.jpg",
+                price: 2550,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 33",
+                img: "product33.jpg",
+                price: 2100,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 34",
+                img: "product34.jpg",
+                price: 3450,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 35",
+                img: "product35.jpg",
+                price: 1300,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 36",
+                img: "product36.jpg",
+                price: 1000,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 37",
+                img: "product37.jpg",
+                price: 3950,
+                description: "" // Add your description here
+            },
+            {
+                name: "Product 38",
+                img: "product38.jpg",
+                price: 2250,
+                description: "" // Add your description here
+            }
+        ];
+
+        let cart = []; // Initialize an empty cart
+
+        // Function to render products dynamically
+        function renderProducts() {
+            const productGrid = document.getElementById('product-grid');
+            productGrid.innerHTML = ''; // Clear existing products
+            products.forEach((product, index) => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.innerHTML = `
+                    <img src="${product.img}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p class="product-price">KSh ${product.price.toFixed(2)}</p>
+                    <p>${product.description}</p>
+                    <button onclick="addToCart(${index})">Add to Basket</button>
+                    <div class="notification" id="notification-${index}">Added to basket!</div>
+                `;
+                productGrid.appendChild(productDiv);
+            });
+        }
+
+        // Function to add a product to the cart
+        function addToCart(productIndex) {
+            const product = products[productIndex];
+            cart.push(product);
+            updateCartDisplay();
+            showNotification(productIndex);
+        }
+
+        // Function to remove a product from the cart
+        function removeFromCart(itemIndex) {
+            cart.splice(itemIndex, 1); // Remove item at the given index
+            updateCartDisplay();
+        }
+
+        // Function to update the cart display and total
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const cartCountElement = document.getElementById('cart-count');
+
+            cartItemsContainer.innerHTML = ''; // Clear current cart items
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #666;">Your basket is empty.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.classList.add('cart-item');
+                    cartItemDiv.innerHTML = `
+                        <img src="${item.img}" alt="${item.name}">
+                        <p>${item.name} - KSh ${item.price.toFixed(2)}</p>
+                        <button onclick="removeFromCart(${index})">Remove</button>
+                    `;
+                    cartItemsContainer.appendChild(cartItemDiv);
+                    total += item.price;
+                });
+            }
+
+            cartTotalElement.textContent = `Total: KSh ${total.toFixed(2)}`;
+            cartCountElement.textContent = cart.length;
+        }
+
+        // Function to show a brief notification when an item is added
+        function showNotification(productIndex) {
+            const notification = document.getElementById(`notification-${productIndex}`);
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 1500); // Hide after 1.5 seconds
+        }
+
+        // Toggle Cart Visibility
+        function toggleCart() {
+            const cartElement = document.getElementById('cart');
+            const overlay = document.querySelector('.overlay');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const basketIcon = document.getElementById('basket-icon');
 
             // Close sidebar if it's open
             if (sidebar.classList.contains('open')) {
@@ -649,83 +1075,15 @@
             }
 
             cartElement.classList.toggle('open');
-
-            // Hide basket icon when cart is open, show it when closed
-            if (cartElement.classList.contains('open')) {
-                basketIcon.classList.add('hide');
-            } else {
-                basketIcon.classList.remove('hide');
-            }
-
-            // Activate overlay only if cart or sidebar is open
-            overlay.classList.toggle('active', cartElement.classList.contains('open') || sidebar.classList.contains('open'));
+            overlay.classList.toggle('active');
+            basketIcon.classList.toggle('hide'); // Hide basket icon when cart is open
         }
 
-        function addToCart(name, price, img, index) {
-            cart.push({ name, price, img });
-            cartCount++;
+        // Initial render of products and cart
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
             updateCartDisplay();
-            showNotification(index);
-        }
-
-        function showNotification(index) {
-            const notification = document.getElementById(`notification-${index}`);
-            notification.style.display = "block";
-            setTimeout(() => {
-                notification.style.display = "none";
-            }, 2000); // Hide after 2 seconds
-        }
-
-        function removeFromCart(index) {
-            if (index >= 0 && index < cart.length) {
-                cart.splice(index, 1);
-                cartCount--;
-                updateCartDisplay();
-            }
-        }
-
-        function updateCartDisplay() {
-            document.getElementById("cart-count").innerText = cartCount;
-            const cartItemsElement = document.getElementById("cart-items");
-            cartItemsElement.innerHTML = "";
-            let total = 0;
-            if (cart.length === 0) {
-                cartItemsElement.innerHTML = "<p>Your basket is empty.</p>";
-            } else {
-                cart.forEach((item, index) => {
-                    const cartItem = document.createElement("div");
-                    cartItem.classList.add("cart-item");
-                    cartItem.innerHTML = `<img src="${item.img}" alt="${item.name}">
-                                        <div>
-                                            <p><strong>${item.name}</strong></p>
-                                            <p>KSh ${item.price}</p>
-                                        </div>
-                                        <button onclick="removeFromCart(${index})">Remove</button>`;
-                    cartItemsElement.appendChild(cartItem);
-                    total += item.price;
-                });
-            }
-            document.getElementById("cart-total").innerText = `Total: KSh ${total}`; // Update total in cart
-        }
-
-        function payNow() {
-            const payNowModal = document.getElementById("payNowModal");
-            payNowModal.style.display = "flex";
-        }
-
-        function closeModal() {
-            const payNowModal = document.getElementById("payNowModal");
-            payNowModal.style.display = "none";
-        }
-
-        function proceedToPayment() {
-            // Redirect to fashion login
-            window.location.href = "fashion login.html";
-        }
-
-        // Initial cart display update
-        updateCartDisplay();
+        });
     </script>
-
 </body>
 </html>
