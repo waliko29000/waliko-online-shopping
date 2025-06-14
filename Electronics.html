@@ -67,6 +67,13 @@
             line-height: 1.6;
             margin-bottom: 20px;
         }
+        .countdown {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007BFF; /* Blue color for the timer */
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
         .developer-info {
             margin-top: 20px;
             font-size: 1.2em;
@@ -84,6 +91,9 @@
             .popup-content p {
                 font-size: 1em;
             }
+            .countdown {
+                font-size: 1.2em;
+            }
             .developer-info {
                 font-size: 1em;
             }
@@ -96,24 +106,52 @@
 <body>
     <div class="popup-overlay" id="maintenancePopup">
         <div class="popup-content">
-            <a href="waliko.html" class="close-button">&times;</a> <div class="tools-icon">🛠️</div>
+            <a href="index.html" class="close-button">&times;</a>
+            <div class="tools-icon">🛠️</div>
             <h1>Under Maintenance!</h1>
             <p>
                 We're currently performing essential updates to improve your experience.
                 **We apologize for any inconvenience** this temporary downtime may cause.
                 We appreciate your patience and look forward to welcoming you back soon with an even better website!
             </p>
+            <p>We'll be back within:</p>
+            <div class="countdown" id="countdown"></div>
             <div class="developer-info">
-                <p>By Developer Dr. Waliko</p>
+                <p>By Developer K. Waliko</p>
             </div>
         </div>
     </div>
 
     <script>
+        // Set the duration of the countdown in minutes
+        const countdownDurationMinutes = 30;
+        let timeRemaining = countdownDurationMinutes * 60; // Convert to seconds
+
+        function updateCountdown() {
+            const minutes = Math.floor(timeRemaining / 60);
+            let seconds = timeRemaining % 60;
+
+            // Add leading zero if seconds is less than 10
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            document.getElementById('countdown').textContent = `${minutes}:${seconds}`;
+
+            if (timeRemaining > 0) {
+                timeRemaining--;
+            } else {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').textContent = "We're back!";
+                // You can add logic here to redirect or refresh the page when done
+            }
+        }
+
         // Show the pop-up on page load
         window.onload = function() {
             const popup = document.getElementById("maintenancePopup");
             popup.style.display = "flex"; // Show the pop-up
+            
+            // Start the countdown
+            countdownInterval = setInterval(updateCountdown, 1000);
         }
     </script>
 </body>
