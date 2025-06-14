@@ -27,7 +27,7 @@
 
         .header h1 {
             margin: 0;
-            font-size: 1.5em;
+            font-size: 1.5em; /* Default font size for header title */
         }
 
         /* Hamburger Menu */
@@ -111,7 +111,8 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            /* Adjusted minmax for better mobile scaling */
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
             gap: 15px;
             padding: 15px;
         }
@@ -201,8 +202,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
+            /* Smaller default size for mobile-first approach */
+            width: 50px; 
+            height: 50px;
             transition: opacity 0.3s, visibility 0.3s; /* Smooth hide/show */
         }
 
@@ -219,7 +221,7 @@
 
         .basket-icon i {
             color: white;
-            font-size: 24px;
+            font-size: 22px; /* Adjusted icon size for smaller container */
         }
 
         .basket-count {
@@ -239,8 +241,8 @@
             position: fixed;
             top: 0;
             right: -100%; /* Initially hidden off-screen */
-            width: 85%;
-            max-width: 350px;
+            width: 90%; /* Wider on small mobile screens */
+            max-width: 300px; /* Reduced max-width for mobile */
             height: 100%;
             background-color: #f1f1f1;
             border-left: 1px solid #fc5e02;
@@ -405,7 +407,7 @@
             padding: 25px;
             border-radius: 10px;
             text-align: center;
-            width: 90%;
+            width: 90%; /* Responsive width for modals */
             max-width: 400px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
@@ -455,36 +457,52 @@
             background-color: #c82333;
         }
 
+        ---
         /* Media Queries for responsiveness */
+        /* Styles for screens 768px and up (desktop/larger tablets) */
         @media (min-width: 768px) {
             .hamburger-menu {
-                display: none;
+                display: none; /* Hide hamburger on desktop */
             }
 
             #sidebar {
-                position: static;
+                position: static; /* Make sidebar part of the normal flow */
                 width: 250px;
                 padding-top: 20px;
                 box-shadow: none;
                 left: 0;
+                /* Adjust if you want it next to content instead of fixed */
+                height: auto; 
+                overflow-y: visible; 
             }
 
             .header {
-                justify-content: center;
+                justify-content: center; /* Center title on desktop if no hamburger */
+                padding: 15px 40px; /* More padding on desktop */
+            }
+
+            .header h1 {
+                font-size: 2em; /* Larger header title on desktop */
             }
 
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                /* Larger min column width for desktop grid */
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+                gap: 20px; /* More gap on desktop */
                 padding: 20px;
             }
 
             .basket-icon {
-                top: 20px;
+                top: 20px; /* Position on top right */
                 right: 20px;
-                bottom: auto;
-                width: 50px;
+                bottom: auto; /* Remove bottom positioning */
+                width: 50px; /* Consistent size for desktop */
                 height: 50px;
-                /* No hide class on desktop, it sits beside header */
+                font-size: 22px; /* Consistent icon size */
+                /* On desktop, the basket icon is always visible, so no 'hide' class needed */
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
             }
 
             .basket-icon i {
@@ -492,16 +510,119 @@
             }
 
             .cart {
-                top: 60px;
-                right: 10px;
-                width: 300px;
-                height: 80%;
+                top: 60px; /* Position below header */
+                right: 10px; /* Closer to the edge */
+                width: 350px; /* Standard cart width on desktop */
+                max-width: 350px; /* Ensure it doesn't get too wide */
+                height: 80%; /* Takes up 80% of viewport height */
                 border-left: 1px solid #fc5e02;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Adjusted shadow */
             }
 
             .overlay {
-                display: none !important;
+                display: none !important; /* Hide overlay on desktop */
+            }
+        }
+
+        /* Further adjustments for very small screens (e.g., iPhone SE) */
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 1.3em; /* Even smaller header title on very small screens */
+            }
+
+            .product-grid {
+                /* Even smaller min column width for tiny screens */
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .product h3 {
+                font-size: 1em; /* Smaller product titles */
+            }
+
+            .product-price {
+                font-size: 0.95em; /* Smaller price text */
+            }
+
+            .product button {
+                padding: 8px 12px; /* Smaller buttons */
+                font-size: 0.85em;
+            }
+
+            .basket-icon {
+                bottom: 15px;
+                right: 15px;
+                width: 45px; /* Even smaller basket icon */
+                height: 45px;
+                padding: 12px;
+            }
+
+            .basket-icon i {
+                font-size: 20px; /* Smaller icon inside the basket */
+            }
+
+            .basket-count {
+                top: 3px;
+                right: 3px;
+                padding: 3px 6px;
+                font-size: 0.7em;
+            }
+
+            .cart {
+                width: 95%; /* Make cart wider on very small screens to fit content */
+                max-width: none; /* Remove max-width on very small screens */
+                padding: 10px;
+            }
+
+            .cart-header h2 {
+                font-size: 1.2em; /* Smaller cart header */
+            }
+
+            .cart-close-btn {
+                font-size: 1.5em; /* Smaller close button */
+            }
+
+            .cart-item img {
+                width: 50px; /* Smaller images in cart */
+                height: 50px;
+            }
+
+            .cart-item p {
+                font-size: 0.8em; /* Smaller text in cart items */
+            }
+
+            .cart-item button {
+                padding: 4px 8px; /* Smaller remove button */
+                font-size: 0.7em;
+            }
+
+            #cart-total {
+                font-size: 1.1em; /* Smaller total font */
+            }
+
+            .paynow-button {
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+
+            .modal-content {
+                padding: 20px;
+                font-size: 0.95em;
+            }
+
+            .modal-content h2 {
+                font-size: 1.2em;
+            }
+
+            .modal-content p {
+                font-size: 0.9em;
+            }
+
+            .modal-content button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+                margin: 0 5px;
             }
         }
     </style>
@@ -761,245 +882,226 @@
                 name: "Product 1",
                 img: "product1.jpg",
                 price: 1300, // Example price
-                description: "good" // Add your description here
+                description: "This is a high-quality men's fashion item." // Add your description here
             },
             {
                 name: "Product 2",
                 img: "product2.jpg",
                 price: 2200,
-                description: "" // Add your description here
+                description: "Stylish and comfortable, perfect for any occasion."
             },
             {
                 name: "Product 3",
                 img: "product3.jpg",
                 price: 1800,
-                description: "" // Add your description here
+                description: "Modern design with a classic touch."
             },
             {
                 name: "Product 4",
                 img: "product4.jpg",
                 price: 2800,
-                description: "" // Add your description here
+                description: "Premium fabric, designed for durability and elegance."
             },
             {
                 name: "Product 5",
                 img: "product5.jpg",
                 price: 1200,
-                description: "" // Add your description here
+                description: "Casual yet chic, a must-have for your wardrobe."
             },
             {
                 name: "Product 6",
                 img: "product6.jpg",
                 price: 950,
-                description: "" // Add your description here
+                description: "Affordable fashion without compromising on style."
             },
             {
                 name: "Product 7",
                 img: "product7.jpg",
                 price: 3500,
-                description: "" // Add your description here
+                description: "Exclusive collection, limited edition design."
             },
             {
                 name: "Product 8",
                 img: "product8.jpg",
                 price: 2000,
-                description: "" // Add your description here
+                description: "Versatile and trendy, suitable for day or night."
             },
             {
                 name: "Product 9",
                 img: "product9.jpg",
                 price: 1750,
-                description: "" // Add your description here
+                description: "Comfortable fit with a sleek silhouette."
             },
             {
                 name: "Product 10",
                 img: "product10.jpg",
                 price: 4000,
-                description: "" // Add your description here
+                description: "Sophisticated wear for the discerning gentleman."
             },
             {
                 name: "Product 11",
                 img: "product11.jpg",
                 price: 1600,
-                description: "" // Add your description here
+                description: "Lightweight and breathable, ideal for everyday wear."
             },
             {
                 name: "Product 12",
                 img: "product12.jpg",
                 price: 2300,
-                description: "" // Add your description here
+                description: "Bold patterns and vibrant colors to stand out."
             },
             {
                 name: "Product 13",
                 img: "product13.jpg",
                 price: 1950,
-                description: "" // Add your description here
+                description: "Tailored to perfection, ensuring a sharp look."
             },
             {
                 name: "Product 14",
                 img: "product14.jpg",
                 price: 3100,
-                description: "" // Add your description here
+                description: "Innovative design meeting traditional craftsmanship."
             },
             {
                 name: "Product 15",
                 img: "product15.jpg",
                 price: 1050,
-                description: "" // Add your description here
+                description: "Simple elegance for minimalist fashion lovers."
             },
             {
                 name: "Product 16",
                 img: "product16.jpg",
                 price: 800,
-                description: "" // Add your description here
+                description: "Budget-friendly option, great for basic essentials."
             },
             {
                 name: "Product 17",
                 img: "product17.jpg",
                 price: 3700,
-                description: "" // Add your description here
+                description: "High-end fashion for special occasions."
             },
             {
                 name: "Product 18",
                 img: "product18.jpg",
                 price: 2150,
-                description: "" // Add your description here
+                description: "Smart casual redefined, effortlessly stylish."
             },
             {
                 name: "Product 19",
                 img: "product19.jpg",
                 price: 1400,
-                description: "" // Add your description here
+                description: "Durable and fashionable, built to last."
             },
             {
                 name: "Product 20",
                 img: "product20.jpg",
                 price: 4200,
-                description: "" // Add your description here
+                description: "The epitome of luxury and comfort."
             },
             {
                 name: "Product 21",
                 img: "product21.jpg",
                 price: 1700,
-                description: "" // Add your description here
+                description: "Classic appeal with a contemporary twist."
             },
             {
                 name: "Product 22",
                 img: "product22.jpg",
                 price: 2400,
-                description: "" // Add your description here
+                description: "Perfect for layering, adding depth to your outfit."
             },
             {
                 name: "Product 23",
                 img: "product23.jpg",
                 price: 2050,
-                description: "" // Add your description here
+                description: "Unique textures and patterns for a standout look."
             },
             {
                 name: "Product 24",
                 img: "product24.jpg",
                 price: 3300,
-                description: "" // Add your description here
+                description: "Crafted for comfort and a flattering fit."
             },
             {
                 name: "Product 25",
                 img: "product25.jpg",
                 price: 1150,
-                description: "" // Add your description here
+                description: "Everyday essential with a touch of sophistication."
             },
             {
                 name: "Product 26",
                 img: "product26.jpg",
                 price: 900,
-                description: "" // Add your description here
+                description: "Simple yet impactful design, a wardrobe staple."
             },
             {
                 name: "Product 27",
                 img: "product27.jpg",
                 price: 3800,
-                description: "" // Add your description here
+                description: "Exquisite details for a refined style."
             },
             {
                 name: "Product 28",
                 img: "product28.jpg",
                 price: 2250,
-                description: "" // Add your description here
+                description: "Comfort-first approach without sacrificing style."
             },
             {
                 name: "Product 29",
                 img: "product29.jpg",
                 price: 1650,
-                description: "" // Add your description here
+                description: "Bold and vibrant, express your unique personality."
             },
             {
                 name: "Product 30",
                 img: "product30.jpg",
                 price: 4500,
-                description: "" // Add your description here
+                description: "Statement piece for the fashion-forward individual."
             },
             {
                 name: "Product 31",
                 img: "product31.jpg",
                 price: 1850,
-                description: "" // Add your description here
+                description: "Clean lines and a modern aesthetic."
             },
             {
                 name: "Product 32",
                 img: "product32.jpg",
                 price: 2550,
-                description: "" // Add your description here
+                description: "Designed for the urban explorer."
             },
             {
                 name: "Product 33",
                 img: "product33.jpg",
                 price: 2100,
-                description: "" // Add your description here
+                description: "Transitional wear, perfect for changing seasons."
             },
             {
                 name: "Product 34",
                 img: "product34.jpg",
                 price: 3450,
-                description: "" // Add your description here
+                description: "High-performance fabric for active lifestyles."
             },
             {
                 name: "Product 35",
                 img: "product35.jpg",
                 price: 1300,
-                description: "" // Add your description here
-            },
-            {
-                name: "Product 36",
-                img: "product36.jpg",
-                price: 1000,
-                description: "" // Add your description here
-            },
-            {
-                name: "Product 37",
-                img: "product37.jpg",
-                price: 3950,
-                description: "" // Add your description here
-            },
-            {
-                name: "Product 38",
-                img: "product38.jpg",
-                price: 2250,
-                description: "" // Add your description here
+                description: "Effortless style for the everyday man."
             }
         ];
 
-        let cart = []; // Initialize an empty cart
+        let cart = [];
 
-        // Function to render products dynamically
         function renderProducts() {
             const productGrid = document.getElementById('product-grid');
-            productGrid.innerHTML = ''; // Clear existing products
+            productGrid.innerHTML = '';
             products.forEach((product, index) => {
                 const productDiv = document.createElement('div');
                 productDiv.classList.add('product');
                 productDiv.innerHTML = `
                     <img src="${product.img}" alt="${product.name}">
                     <h3>${product.name}</h3>
-                    <p class="product-price">KSh ${product.price.toFixed(2)}</p>
+                    <p class="product-price">KSh ${product.price}</p>
                     <p>${product.description}</p>
                     <button onclick="addToCart(${index})">Add to Basket</button>
                     <div class="notification" id="notification-${index}">Added to basket!</div>
@@ -1008,65 +1110,67 @@
             });
         }
 
-        // Function to add a product to the cart
         function addToCart(productIndex) {
             const product = products[productIndex];
-            cart.push(product);
-            updateCartDisplay();
+            const existingItem = cart.find(item => item.name === product.name);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            renderCart();
             showNotification(productIndex);
         }
 
-        // Function to remove a product from the cart
-        function removeFromCart(itemIndex) {
-            cart.splice(itemIndex, 1); // Remove item at the given index
-            updateCartDisplay();
+        function removeFromCart(productName) {
+            cart = cart.filter(item => item.name !== productName);
+            renderCart();
         }
 
-        // Function to update the cart display and total
-        function updateCartDisplay() {
+        function renderCart() {
             const cartItemsContainer = document.getElementById('cart-items');
-            const cartTotalElement = document.getElementById('cart-total');
             const cartCountElement = document.getElementById('cart-count');
-
-            cartItemsContainer.innerHTML = ''; // Clear current cart items
+            const cartTotalElement = document.getElementById('cart-total');
             let total = 0;
 
+            cartItemsContainer.innerHTML = ''; // Clear existing items
+
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #666;">Your basket is empty.</p>';
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #777;">Your basket is empty.</p>';
             } else {
-                cart.forEach((item, index) => {
+                cart.forEach(item => {
                     const cartItemDiv = document.createElement('div');
                     cartItemDiv.classList.add('cart-item');
                     cartItemDiv.innerHTML = `
                         <img src="${item.img}" alt="${item.name}">
-                        <p>${item.name} - KSh ${item.price.toFixed(2)}</p>
-                        <button onclick="removeFromCart(${index})">Remove</button>
+                        <p>${item.name} (x${item.quantity}) - KSh ${item.price * item.quantity}</p>
+                        <button onclick="removeFromCart('${item.name}')">Remove</button>
                     `;
                     cartItemsContainer.appendChild(cartItemDiv);
-                    total += item.price;
+                    total += item.price * item.quantity;
                 });
             }
 
-            cartTotalElement.textContent = `Total: KSh ${total.toFixed(2)}`;
-            cartCountElement.textContent = cart.length;
+            cartCountElement.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotalElement.textContent = `Total: KSh ${total}`;
         }
 
-        // Function to show a brief notification when an item is added
         function showNotification(productIndex) {
             const notification = document.getElementById(`notification-${productIndex}`);
             notification.style.display = 'block';
             setTimeout(() => {
                 notification.style.display = 'none';
-            }, 1500); // Hide after 1.5 seconds
+            }, 2000); // Hide after 2 seconds
         }
 
         // Toggle Cart Visibility
         function toggleCart() {
             const cartElement = document.getElementById('cart');
             const overlay = document.querySelector('.overlay');
+            const basketIcon = document.getElementById('basket-icon');
             const sidebar = document.getElementById('sidebar');
             const hamburger = document.querySelector('.hamburger-menu');
-            const basketIcon = document.getElementById('basket-icon');
 
             // Close sidebar if it's open
             if (sidebar.classList.contains('open')) {
@@ -1075,15 +1179,16 @@
             }
 
             cartElement.classList.toggle('open');
-            overlay.classList.toggle('active');
             basketIcon.classList.toggle('hide'); // Hide basket icon when cart is open
+            overlay.classList.toggle('active'); // Show overlay
         }
 
-        // Initial render of products and cart
+        // Initial render
         document.addEventListener('DOMContentLoaded', () => {
             renderProducts();
-            updateCartDisplay();
+            renderCart();
         });
     </script>
+
 </body>
 </html>
