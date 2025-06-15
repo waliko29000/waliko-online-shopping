@@ -3,156 +3,1407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance</title>
+    <title>Waliko Shop - Electronics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000; /* Black background */
-            color: #fff; /* White text for better contrast */
+            padding: 0;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
-        /* Pop-up overlay */
-        .popup-overlay {
-            display: none; /* Hidden by default */
+
+        .header {
+            background-color: hsl(240, 4%, 5%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em; /* Default font size for header title */
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: block;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .hamburger-menu div {
+            width: 30px;
+            height: 4px;
+            background-color: white;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        /* Rotate first bar */
+        .change .bar1 {
+            transform: translate(0, 10px) rotate(-45deg);
+        }
+
+        /* Fade out the middle bar */
+        .change .bar2 {
+            opacity: 0;
+        }
+
+        /* Rotate last bar */
+        .change .bar3 {
+            transform: translate(0, -10px) rotate(45deg);
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: hsl(240, 4%, 5%);
+            position: fixed;
+            left: -250px; /* Initially hidden */
+            top: 0;
+            padding-top: 60px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            overflow-y: auto; /* Added for scrollable content */
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 15px 20px;
+            margin: 5px 0;
+            transition: background-color 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Overlay for when sidebar/cart/modals are open */
+        .overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure it's on top */
-        }
-        /* Pop-up content */
-        .popup-content {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            width: 90%; /* More mobile-friendly width */
-            max-width: 400px;
-            position: relative; /* For positioning the close button */
-        }
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #555;
-            text-decoration: none; /* Remove underline for the link */
-        }
-        .close-button:hover {
-            color: #000;
-        }
-        .tools-icon {
-            font-size: 50px;
-            color: red;
-            margin-bottom: 20px;
-        }
-        .popup-content h1 {
-            color: red;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        .popup-content p {
-            color: #333; /* Darker text for readability inside popup */
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .countdown {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #007BFF; /* Blue color for the timer */
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
-        .developer-info {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #555;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
 
-        /* Media query for smaller screens */
-        @media (max-width: 600px) {
-            .popup-content {
-                padding: 20px;
+        .overlay.active {
+            display: block;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .product {
+            border: 1px solid #fc5e02;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer; /* Indicate clickable */
+            transition: transform 0.2s ease-in-out;
+            display: flex; /* Make product card a flex container */
+            flex-direction: column; /* Stack contents vertically */
+            justify-content: space-between; /* Push button to bottom */
+            height: auto; /* Allow height to adjust */
+            min-height: 250px; /* Ensure a minimum height for consistency */
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            object-fit: contain; /* Ensures the whole image is visible, no cropping */
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.1em;
+            margin: 10px 0 5px;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product .description-short {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box; /* For multi-line ellipsis */
+            -webkit-line-clamp: 3; /* Limit to 3 lines */
+            -webkit-box-orient: vertical;
+            flex-grow: 1; /* Allow description to take available space */
+        }
+
+        /* Add to Basket button styling (medium size) */
+        .product button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background-color 0.3s;
+            width: calc(100% - 20px);
+            max-width: 200px;
+            margin-top: auto; /* Push button to the bottom */
+            display: inline-block;
+        }
+
+        .product button:hover {
+            background-color: #0056b3;
+        }
+
+        .notification {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+            font-size: 0.8em;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .basket-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; 
+            height: 50px;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        /* Hide basket icon when cart is open */
+        .basket-icon.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .basket-icon:hover {
+            background-color: #ff4500;
+        }
+
+        .basket-icon i {
+            color: white;
+            font-size: 22px;
+        }
+
+        .basket-count {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 50%;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .cart {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 90%;
+            max-width: 300px;
+            height: 100%;
+            background-color: #f1f1f1;
+            border-left: 1px solid #fc5e02;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .cart.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 0 0 10px 0;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .cart-header h2 {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 1.4em;
+        }
+
+        /* Cart close button style */
+        .cart-close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 1.8em;
+            color: #555;
+            cursor: pointer;
+            z-index: 10;
+            transition: color 0.2s;
+        }
+
+        .cart-close-btn:hover {
+            color: #dc3545;
+        }
+
+        #scrollable-cart-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0;
+            margin-top: 15px;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-items {
+            /* This div now holds the actual product item divs */
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .cart-item:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        .cart-item p {
+            margin: 0;
+            font-size: 0.9em;
+            flex-grow: 1;
+        }
+
+        /* Remove button inside cart item */
+        .cart-item button {
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 0.75em;
+            white-space: nowrap;
+            margin-left: 10px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item button:hover {
+            background-color: #c82333;
+        }
+
+        #cart-summary-scrollable {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        #cart-total {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin: 0;
+        }
+
+        .paynow-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            width: auto;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .paynow-button:hover {
+            background-color: #218838;
+        }
+
+        /* General Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+            padding: 10px; /* Reduced overall modal padding for small screens */
+            box-sizing: border-box;
+            /* No overflow-y:auto here; it's on modal-content */
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px; /* Slightly reduced default padding */
+            border-radius: 10px;
+            text-align: center;
+            width: 95%; /* Increased width slightly for more content room */
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column; /* Stack content vertically */
+            max-height: 90vh; /* Limit modal height to viewport height */
+            overflow-y: auto; /* CRUCIAL: Make modal content scrollable */
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-size: 1.3em;
+            color: #333;
+            flex-shrink: 0; /* Prevent title from shrinking */
+        }
+
+        .modal-content p {
+            margin: 10px 0; /* Reduced margin */
+            font-size: 1em;
+            line-height: 1.5;
+            color: #555;
+            flex-shrink: 0; /* Prevent paragraphs from shrinking */
+        }
+
+        .modal-content button {
+            margin-top: 15px;
+            width: auto;
+            padding: 10px 20px;
+            display: inline-block;
+            margin: 0 8px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+        }
+
+        .modal-content .confirm-btn {
+            background-color: #28a745;
+        }
+
+        .modal-content .confirm-btn:hover {
+            background-color: #218838;
+        }
+
+        .modal-content .cancel-btn {
+            background-color: #6c757d;
+        }
+
+        .modal-content .cancel-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .modal-content .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .modal-content .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Specific styles for Product Details Modal */
+        #productDetailsModal .modal-content {
+            text-align: left; /* Align text left for details */
+            max-width: 600px; /* Wider for details */
+            padding-top: 35px; /* Added padding to make space for close button */
+        }
+
+        #productDetailsModal img {
+            max-width: 90%; /* Increased max-width for image in modal on small screens */
+            height: auto; /* Ensure proportional scaling */
+            object-fit: contain; /* Prevents image from being cut off if aspect ratio differs */
+            display: block;
+            margin: 0 auto 20px auto; /* Center image with bottom margin */
+            border-radius: 8px;
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        #productDetailsModal h2 {
+            text-align: center;
+            margin-bottom: 15px; /* Reduced margin */
+            font-size: 1.6em;
+            flex-shrink: 0;
+        }
+
+        #modal-product-price {
+            text-align: center;
+            flex-shrink: 0;
+            font-size: 1.2em; /* Slightly larger price in modal */
+        }
+
+        #modal-product-description {
+            flex-shrink: 0;
+            margin-bottom: 15px; /* Space before specs */
+        }
+
+        #productDetailsModal ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            flex-grow: 1; /* Allow specs list to grow and take available space */
+            /* Removed overflow-y:auto here; it's now on .modal-content for the whole content */
+        }
+
+        #productDetailsModal ul li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+            font-size: 1em;
+            color: #444;
+        }
+        #productDetailsModal ul li strong {
+            color: #222;
+        }
+
+        #productDetailsModal .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8em;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        #productDetailsModal .modal-close-btn:hover {
+            color: #dc3545;
+        }
+        
+        #modal-add-to-cart-btn {
+            margin-top: 15px; /* Ensure button has good spacing */
+            width: calc(100% - 20px); /* Make button wider inside modal */
+            max-width: 250px; /* Max width for button */
+            align-self: center; /* Center the button in flex container */
+            background-color: #007bff; /* Consistent button color */
+        }
+        #modal-add-to-cart-btn:hover {
+            background-color: #0056b3;
+        }
+
+
+        /* Media Queries for responsiveness */
+        @media (min-width: 768px) {
+            .hamburger-menu { display: none; }
+            #sidebar {
+                position: static;
+                width: 250px;
+                padding-top: 20px;
+                box-shadow: none;
+                left: 0;
+                height: auto; 
+                overflow-y: visible; 
             }
-            .popup-content h1 {
-                font-size: 1.5em;
+            .header { justify-content: center; padding: 15px 40px; }
+            .header h1 { font-size: 2em; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
+            .basket-icon {
+                top: 20px; right: 20px; bottom: auto;
+                width: 50px; height: 50px; font-size: 22px;
+                opacity: 1; visibility: visible; pointer-events: auto;
             }
-            .popup-content p {
-                font-size: 1em;
+            .basket-icon i { font-size: 22px; }
+            .cart {
+                top: 60px; right: 10px; width: 350px; max-width: 350px; height: 80%;
+                border-left: 1px solid #fc5e02; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             }
-            .countdown {
-                font-size: 1.2em;
+            .overlay { display: none !important; }
+
+            /* Product Details Modal on larger screens */
+            #productDetailsModal .modal-content {
+                max-width: 700px; /* Even wider on desktop */
+                padding: 30px;
+                padding-top: 40px; /* Adjust padding-top for close button */
             }
-            .developer-info {
-                font-size: 1em;
+            #productDetailsModal img {
+                max-width: 60%; /* Smaller image in modal on desktop to balance with text */
             }
-            .tools-icon {
-                font-size: 40px;
+        }
+
+        /* Further adjustments for very small screens (e.g., iPhone SE) */
+        @media (max-width: 375px) {
+            .header h1 { font-size: 1.3em; }
+            .product-grid { 
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjusted min-width for more flexibility */
+                gap: 10px; 
+                padding: 10px; 
+            }
+            .product {
+                min-height: 220px; /* Slightly smaller min-height for very small screens */
+                padding: 8px;
+            }
+            .product img {
+                margin-bottom: 5px;
+            }
+            .product h3 { font-size: 1em; margin: 5px 0; }
+            .product-price { font-size: 0.95em; margin-bottom: 5px;}
+            .product .description-short { font-size: 0.8em; margin-bottom: 5px;}
+            .product button { padding: 8px 12px; font-size: 0.85em; }
+            .basket-icon { bottom: 15px; right: 15px; width: 45px; height: 45px; padding: 12px; }
+            .basket-icon i { font-size: 20px; }
+            .basket-count { top: 3px; right: 3px; padding: 3px 6px; font-size: 0.7em; }
+            .cart { width: 95%; max-width: none; padding: 10px; }
+            .cart-header h2 { font-size: 1.2em; }
+            .cart-close-btn { font-size: 1.5em; }
+            .cart-item img { width: 50px; height: 50px; }
+            .cart-item p { font-size: 0.8em; }
+            .cart-item button { padding: 4px 8px; font-size: 0.7em; }
+            #cart-total { font-size: 1.1em; }
+            .paynow-button { padding: 6px 12px; font-size: 0.9em; }
+            .modal-content { padding: 15px; font-size: 0.9em; } /* Reduced padding */
+            .modal-content h2 { font-size: 1.2em; }
+            #modal-product-price { font-size: 1.1em;}
+            .modal-content p { font-size: 0.9em; }
+            .modal-content button { padding: 8px 15px; font-size: 0.9em; margin: 0 5px; }
+
+            /* Product Details Modal on very small screens */
+            #productDetailsModal .modal-content {
+                padding: 10px; /* Further reduced padding */
+                padding-top: 30px; /* Ensure close button space */
+            }
+            #productDetailsModal h2 {
+                font-size: 1.4em;
+            }
+            #productDetailsModal ul li {
+                font-size: 0.85em; /* Adjusted font size for readability */
             }
         }
     </style>
 </head>
 <body>
-    <div class="popup-overlay" id="maintenancePopup">
-        <div class="popup-content">
-            <a href="index.html" class="close-button">&times;</a>
-            <div class="tools-icon">🛠️</div>
-            <h1>Under Maintenance!</h1>
-            <p>
-                We're currently performing essential updates to improve your experience.
-                **We apologize for any inconvenience** this temporary downtime may cause.
-                We appreciate your patience and look forward to welcoming you back soon with an even better website!
-            </p>
-            <p>We'll be back within:</p>
-            <div class="countdown" id="countdown"></div>
-            <div class="developer-info">
-                <p>By Developer K. Waliko</p>
+
+    <div class="header">
+        <div class="hamburger-menu" onclick="toggleMenu(this)">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+        <h1>Waliko Electronics</h1>
+    </div>
+
+    <div id="sidebar">
+        <a href="fashion login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="fashion register.html"><i class="fas fa-user-plus"></i> Register</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-user-circle"></i> My Profile</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-key"></i> Change Password</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-address-book"></i> Address Book</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-credit-card"></i> Payment Methods</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-history"></i> Order History</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-truck"></i> Order Tracking</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-undo"></i> Returns & Refunds</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="#" onclick="handleAccountAction(event, 'deactivate')"><i class="fas fa-user-slash"></i> Deactivate Account</a>
+        <a href="#" onclick="handleAccountAction(event, 'delete')"><i class="fas fa-user-times"></i> Delete Account</a>
+        <hr style="border-color: #333; margin: 10px 20px;">
+        <a href="index.html"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+    </div>
+
+    <div class="overlay" onclick="closeAllMenus()"></div>
+
+    <div class="basket-icon" id="basket-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-basket"></i>
+        <div id="cart-count" class="basket-count">0</div>
+    </div>
+
+    <div class="cart" id="cart">
+        <div class="cart-header">
+            <span class="cart-close-btn" onclick="closeCart()">&times;</span>
+            <h2>Shopping Basket</h2>
+        </div>
+        <div id="scrollable-cart-content">
+            <div id="cart-items"></div>
+            <div id="cart-summary-scrollable">
+                <div id="cart-total">Total: KSh 0</div>
+                <button class="paynow-button" onclick="payNow()">Pay Now</button>
             </div>
         </div>
     </div>
 
+    <div class="product-grid" id="product-grid"></div>
+
+    <div id="productDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeModal('productDetailsModal')">&times;</span>
+            <img id="modal-product-img" src="" alt="Product Image">
+            <h2 id="modal-product-name"></h2>
+            <p id="modal-product-price" class="product-price"></p>
+            <p id="modal-product-description"></p>
+            <ul id="modal-product-specs">
+                </ul>
+            <button id="modal-add-to-cart-btn" class="confirm-btn">Add to Basket</button>
+        </div>
+    </div>
+
+    <div id="payNowModal" class="modal">
+        <div class="modal-content">
+            <h2>Payment Confirmation</h2>
+            <p>Are you sure you want to proceed with the payment? Login to proceed.</p>
+            <button class="confirm-btn" onclick="proceedToPayment()">Yes</button>
+            <button class="cancel-btn" onclick="closeModal('payNowModal')">No</button>
+        </div>
+    </div>
+
+    <div id="deactivateAccountModal" class="modal">
+        <div class="modal-content">
+            <h2>Deactivate Account</h2>
+            <p>Are you sure you want to deactivate your account? You can reactivate it later by logging back in.</p>
+            <button class="confirm-btn" onclick="deactivateAccountConfirmed()">Deactivate</button>
+            <button class="cancel-btn" onclick="closeModal('deactivateAccountModal')">Cancel</button>
+        </div>
+    </div>
+
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <h2>Delete Account Permanently</h2>
+            <p><strong>Warning:</strong> Deleting your account is permanent and cannot be undone. All your data will be removed.</p>
+            <p>Are you absolutely sure you want to delete your account?</p>
+            <button class="delete-btn" onclick="deleteAccountConfirmed()">Delete Permanently</button>
+            <button class="cancel-btn" onclick="closeModal('deleteAccountModal')">Cancel</button>
+        </div>
+    </div>
+
     <script>
-        // Set the duration of the countdown in minutes
-        const countdownDurationMinutes = 30;
-        let timeRemaining = countdownDurationMinutes * 60; // Convert to seconds
+        let isLoggedIn = false; 
 
-        function updateCountdown() {
-            const minutes = Math.floor(timeRemaining / 60);
-            let seconds = timeRemaining % 60;
+        function closeAllMenus() {
+            const sidebar = document.getElementById('sidebar');
+            const cartElement = document.getElementById('cart');
+            const overlay = document.querySelector('.overlay');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const basketIcon = document.getElementById('basket-icon');
 
-            // Add leading zero if seconds is less than 10
-            seconds = seconds < 10 ? '0' + seconds : seconds;
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('change');
+            }
+            if (cartElement.classList.contains('open')) {
+                cartElement.classList.remove('open');
+                basketIcon.classList.remove('hide');
+            }
+            closeModal('payNowModal');
+            closeModal('deactivateAccountModal');
+            closeModal('deleteAccountModal');
+            closeModal('productDetailsModal'); // Close product details modal too
 
-            document.getElementById('countdown').textContent = `${minutes}:${seconds}`;
+            overlay.classList.remove('active');
+        }
 
-            if (timeRemaining > 0) {
-                timeRemaining--;
-            } else {
-                clearInterval(countdownInterval);
-                document.getElementById('countdown').textContent = "We're back!";
-                // You can add logic here to redirect or refresh the page when done
+        function toggleMenu(x) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            const cartElement = document.getElementById('cart');
+            const basketIcon = document.getElementById('basket-icon');
+
+            if (cartElement.classList.contains('open')) {
+                cartElement.classList.remove('open');
+                basketIcon.classList.remove('hide');
+            }
+            closeModal('productDetailsModal'); // Close product details modal
+
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+            if (x) {
+                x.classList.toggle("change");
             }
         }
 
-        // Show the pop-up on page load
-        window.onload = function() {
-            const popup = document.getElementById("maintenancePopup");
-            popup.style.display = "flex"; // Show the pop-up
+        function closeCart() {
+            const cartElement = document.getElementById('cart');
+            const overlay = document.querySelector('.overlay');
+            const basketIcon = document.getElementById('basket-icon');
+
+            cartElement.classList.remove('open');
+            basketIcon.classList.remove('hide');
             
-            // Start the countdown
-            countdownInterval = setInterval(updateCountdown, 1000);
+            // Only remove overlay if no modal or sidebar is open
+            const anyModalOpen = document.querySelectorAll('.modal[style*="display: flex"]').length > 0;
+            const sidebarOpen = document.getElementById('sidebar').classList.contains('open');
+            if (!anyModalOpen && !sidebarOpen) {
+                overlay.classList.remove('active');
+            }
         }
+
+        function showAlertAndPreventDefault(event) {
+            alert('Please log in to access this feature.');
+            event.preventDefault();
+            closeAllMenus();
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const overlay = document.querySelector('.overlay');
+            modal.style.display = 'flex';
+            overlay.classList.add('active');
+            closeAllMenusExceptModal(modalId);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+            const anyModalOpen = document.querySelectorAll('.modal[style*="display: flex"]').length > 0;
+            const sidebarOpen = document.getElementById('sidebar').classList.contains('open');
+            const cartOpen = document.getElementById('cart').classList.contains('open');
+            if (!anyModalOpen && !sidebarOpen && !cartOpen) {
+                document.querySelector('.overlay').classList.remove('active');
+            }
+        }
+
+        function closeAllMenusExceptModal(modalId) {
+            const sidebar = document.getElementById('sidebar');
+            const cartElement = document.getElementById('cart');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const basketIcon = document.getElementById('basket-icon');
+
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('change');
+            }
+            if (cartElement.classList.contains('open')) {
+                cartElement.classList.remove('open');
+                basketIcon.classList.remove('hide');
+            }
+
+            const allModals = document.querySelectorAll('.modal');
+            allModals.forEach(modal => {
+                if (modal.id !== modalId) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        function handleAccountAction(event, actionType) {
+            event.preventDefault();
+
+            if (!isLoggedIn) {
+                alert('Please log in to access this feature.');
+                closeAllMenus();
+            } else {
+                if (actionType === 'deactivate') {
+                    openModal('deactivateAccountModal');
+                } else if (actionType === 'delete') {
+                    openModal('deleteAccountModal');
+                }
+            }
+        }
+
+        function payNow() {
+            openModal('payNowModal');
+        }
+
+        function proceedToPayment() {
+            alert('Redirecting to login page to proceed with payment...');
+            window.location.href = "fashion login.html";
+            closeModal('payNowModal');
+        }
+
+        function deactivateAccountConfirmed() {
+            alert('Your account has been deactivated. You can reactivate it by logging in again.');
+            window.location.href = "fashion login.html";
+            closeModal('deactivateAccountModal');
+        }
+
+        function deleteAccountConfirmed() {
+            alert('Your account has been permanently deleted. We are sorry to see you go!');
+            window.location.href = "index.html";
+            closeModal('deleteAccountModal');
+        }
+
+        // --- UPDATED PRODUCTS DATA WITH DETAILED SPECS AND IMAGE SOURCES ---
+        const products = [
+            // iPhones
+            {
+                name: "iPhone 16 Pro Max",
+                img: "elec1.jpg", // Changed to elec1.jpg
+                price: 220000,
+                description: "The absolute latest and most powerful iPhone, with cutting-edge features and unparalleled performance.",
+                specs: {
+                    ram: "12GB",
+                    storage: "256GB / 512GB / 1TB",
+                    mainCamera: "48MP Main, 12MP Ultra-Wide, 12MP Telephoto (5x Optical Zoom)",
+                    selfieCamera: "12MP TrueDepth with Autofocus",
+                    display: "6.9-inch Super Retina XDR ProMotion, 120Hz, Always-On",
+                    battery: "Up to 30 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 15 Pro Max",
+                img: "elec2.jpg", // Changed to elec2.jpg
+                price: 180000,
+                description: "Experience the pinnacle of smartphone technology with the iPhone 15 Pro Max, featuring a titanium design and A17 Pro chip.",
+                specs: {
+                    ram: "8GB",
+                    storage: "256GB / 512GB / 1TB",
+                    mainCamera: "48MP Main, 12MP Ultra-Wide, 12MP Telephoto (5x Optical Zoom)",
+                    selfieCamera: "12MP TrueDepth with Autofocus",
+                    display: "6.7-inch Super Retina XDR ProMotion, 120Hz, Always-On",
+                    battery: "Up to 29 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 14",
+                img: "elec3.jpg", // Changed to elec3.jpg
+                price: 110000,
+                description: "A fantastic balance of performance and features, ideal for everyday use with an improved camera system.",
+                specs: {
+                    ram: "6GB",
+                    storage: "128GB / 256GB / 512GB",
+                    mainCamera: "12MP Main, 12MP Ultra-Wide",
+                    selfieCamera: "12MP TrueDepth with Autofocus",
+                    display: "6.1-inch Super Retina XDR",
+                    battery: "Up to 20 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 13",
+                img: "elec4.jpg", // Changed to elec4.jpg
+                price: 85000,
+                description: "Reliable performance and a great camera for your daily needs, with impressive battery life.",
+                specs: {
+                    ram: "4GB",
+                    storage: "128GB / 256GB / 512GB",
+                    mainCamera: "12MP Main, 12MP Ultra-Wide",
+                    selfieCamera: "12MP TrueDepth",
+                    display: "6.1-inch Super Retina XDR",
+                    battery: "Up to 19 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 12",
+                img: "elec5.jpg", // Changed to elec5.jpg
+                price: 65000,
+                description: "Still a powerful device with strong performance, a durable Ceramic Shield front cover, and 5G capability.",
+                specs: {
+                    ram: "4GB",
+                    storage: "64GB / 128GB / 256GB",
+                    mainCamera: "12MP Main, 12MP Ultra-Wide",
+                    selfieCamera: "12MP TrueDepth",
+                    display: "6.1-inch Super Retina XDR",
+                    battery: "Up to 17 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 11",
+                img: "elec6.jpg", // Changed to elec6.jpg
+                price: 45000,
+                description: "An affordable iPhone with a great dual-camera system and solid performance for its price point.",
+                specs: {
+                    ram: "4GB",
+                    storage: "64GB / 128GB / 256GB",
+                    mainCamera: "12MP Wide, 12MP Ultra-Wide",
+                    selfieCamera: "12MP TrueDepth",
+                    display: "6.1-inch Liquid Retina HD",
+                    battery: "Up to 17 hours video playback"
+                }
+            },
+            // Latest Smartphones (Android)
+            {
+                name: "Samsung Galaxy S25 Ultra",
+                img: "elec7.jpg", // Changed to elec7.jpg
+                price: 190000,
+                description: "The latest Android flagship with an incredible camera system, powerful processor, and S Pen integration.",
+                specs: {
+                    ram: "12GB / 16GB",
+                    storage: "256GB / 512GB / 1TB",
+                    mainCamera: "200MP Wide, 50MP Ultra-Wide, 10MP Telephoto (3x), 10MP Telephoto (10x)",
+                    selfieCamera: "40MP",
+                    display: "6.9-inch Dynamic AMOLED 2X, 120Hz, QHD+",
+                    battery: "5000 mAh, Super Fast Charging"
+                }
+            },
+            {
+                name: "Google Pixel 9 Pro",
+                img: "elec8.jpg", // Changed to elec8.jpg
+                price: 150000,
+                description: "Pure Android experience with advanced AI features, a stunning camera, and Google's Tensor G4 chip.",
+                specs: {
+                    ram: "12GB",
+                    storage: "128GB / 256GB / 512GB",
+                    mainCamera: "50MP Wide, 48MP Ultra-Wide, 48MP Telephoto",
+                    selfieCamera: "10.8MP",
+                    display: "6.7-inch LTPO OLED, 120Hz, QHD+",
+                    battery: "5000 mAh, Fast Charging, Wireless Charging"
+                }
+            },
+            {
+                name: "OnePlus 13",
+                img: "elec9.jpg", // Changed to elec9.jpg
+                price: 130000,
+                description: "Blazing fast performance, rapid charging, and a smooth display for power users and gamers.",
+                specs: {
+                    ram: "12GB / 16GB",
+                    storage: "256GB / 512GB",
+                    mainCamera: "50MP Wide, 48MP Ultra-Wide, 32MP Telephoto",
+                    selfieCamera: "16MP",
+                    display: "6.7-inch AMOLED, 120Hz, QHD+",
+                    battery: "5400 mAh, 100W SuperVOOC Charging"
+                }
+            },
+            // Laptops
+            {
+                name: "MacBook Air M3",
+                img: "elec10.jpg", // Changed to elec10.jpg
+                price: 170000,
+                description: "Ultra-portable and powerful laptop with the efficient Apple M3 chip, perfect for everyday tasks and creative work.",
+                specs: {
+                    ram: "8GB / 16GB / 24GB Unified Memory",
+                    storage: "256GB / 512GB / 1TB / 2TB SSD",
+                    processor: "Apple M3 chip (8-core CPU, 8-10 core GPU)",
+                    display: "13.6-inch Liquid Retina display",
+                    battery: "Up to 18 hours"
+                }
+            },
+            {
+                name: "Dell XPS 15",
+                img: "elec11.jpg", // Changed to elec11.jpg
+                price: 160000,
+                description: "Premium laptop with a stunning InfinityEdge display and excellent performance for creatives and professionals.",
+                specs: {
+                    ram: "16GB / 32GB DDR5",
+                    storage: "512GB / 1TB / 2TB NVMe SSD",
+                    processor: "Intel Core Ultra 7/9",
+                    display: "15.6-inch OLED (3.5K) or FHD+ IPS",
+                    battery: "86 Whr, up to 12 hours"
+                }
+            },
+            {
+                name: "HP Spectre x360 14",
+                img: "elec12.jpg", // Changed to elec12.jpg
+                price: 145000,
+                description: "Versatile 2-in-1 laptop with a sleek design, powerful performance, and a vibrant OLED touch display.",
+                specs: {
+                    ram: "16GB / 32GB LPDDR5",
+                    storage: "512GB / 1TB NVMe SSD",
+                    processor: "Intel Core Ultra 5/7",
+                    display: "14-inch OLED touch, 2.8K, 90Hz",
+                    battery: "66 Whr, up to 13 hours"
+                }
+            },
+            {
+                name: "Lenovo ThinkPad X1 Carbon Gen 12",
+                img: "elec13.jpg", // Changed to elec13.jpg
+                price: 155000,
+                description: "Business-class laptop known for its durability, security features, and exceptional keyboard, ideal for productivity.",
+                specs: {
+                    ram: "16GB / 32GB LPDDR5X",
+                    storage: "512GB / 1TB / 2TB PCIe Gen4 SSD",
+                    processor: "Intel Core Ultra 5/7/9",
+                    display: "14-inch OLED (2.8K) or IPS (WUXGA)",
+                    battery: "57 Whr, up to 15 hours"
+                }
+            },
+            // Computers (Desktops & All-in-Ones)
+            {
+                name: "iMac 24-inch (M3)",
+                img: "elec14.jpg", // Changed to elec14.jpg
+                price: 250000,
+                description: "Stunning all-in-one desktop with a beautiful 4.5K Retina display and the powerful Apple M3 chip.",
+                specs: {
+                    ram: "8GB / 16GB / 24GB Unified Memory",
+                    storage: "256GB / 512GB / 1TB / 2TB SSD",
+                    processor: "Apple M3 chip (8-core CPU, 8-10 core GPU)",
+                    display: "24-inch 4.5K Retina display",
+                    ports: "2-4 Thunderbolt / USB 4 ports"
+                }
+            },
+            {
+                name: "Gaming PC (High-End)",
+                img: "elec15.jpg", // Changed to elec15.jpg
+                price: 300000,
+                description: "Unleash ultimate gaming performance with this custom-built high-end PC, featuring the latest graphics and processing power.",
+                specs: {
+                    ram: "32GB DDR5",
+                    storage: "1TB NVMe SSD + 2TB HDD",
+                    processor: "Intel Core i9-14900K or AMD Ryzen 9 7950X3D",
+                    graphicsCard: "NVIDIA GeForce RTX 4090",
+                    cooling: "Liquid Cooling System"
+                }
+            },
+            // Other Electronics (these will still use "elect.jpg" as they are beyond the 15th product)
+            {
+                name: "Dell OptiPlex 7000 Tower",
+                img: "elect.jpg",
+                price: 90000,
+                description: "Reliable and efficient desktop for office and everyday computing tasks, offering robust performance and security.",
+                specs: {
+                    ram: "8GB / 16GB DDR4",
+                    storage: "256GB / 512GB SSD",
+                    processor: "Intel Core i5-13th Gen",
+                    graphicsCard: "Integrated Intel Graphics",
+                    ports: "Multiple USB, DisplayPort, HDMI"
+                }
+            },
+            {
+                name: "Microsoft Surface Studio 3",
+                img: "elect.jpg",
+                price: 280000,
+                description: "Innovative all-in-one designed for creative professionals, with a stunning adjustable PixelSense touch display.",
+                specs: {
+                    ram: "32GB DDR4",
+                    storage: "1TB / 2TB SSD",
+                    processor: "Intel Core i7-11370H",
+                    graphicsCard: "NVIDIA GeForce RTX 3060 Laptop GPU",
+                    display: "28-inch PixelSense Display (4500x3000) with touch and Pen support"
+                }
+            },
+            {
+                name: "Wireless Headphones",
+                img: "elect.jpg",
+                price: 7500,
+                description: "Immersive sound and comfortable fit with active noise cancellation and long battery life.",
+                specs: {
+                    connectivity: "Bluetooth 5.2",
+                    batteryLife: "Up to 30 hours",
+                    features: "Active Noise Cancellation, Foldable Design",
+                    audioQuality: "Hi-Res Audio"
+                }
+            },
+            {
+                name: "Smartwatch Pro",
+                img: "elect.jpg",
+                price: 12000,
+                description: "Track your fitness, monitor your health, and stay connected with notifications on your wrist.",
+                specs: {
+                    display: "1.5-inch AMOLED Touchscreen",
+                    sensors: "Heart Rate, SpO2, GPS, Accelerometer",
+                    batteryLife: "Up to 7 days (typical usage)",
+                    waterResistance: "5ATM"
+                }
+            },
+            {
+                name: "Portable Power Bank",
+                img: "elect.jpg",
+                price: 3000,
+                description: "Keep your devices charged on the go with this high-capacity and fast-charging power bank.",
+                specs: {
+                    capacity: "20000 mAh",
+                    ports: "2x USB-A, 1x USB-C (PD)",
+                    output: "Up to 22.5W",
+                    features: "Fast Charging, LED Power Indicator"
+                }
+            },
+            {
+                name: "Bluetooth Speaker",
+                img: "elect.jpg",
+                price: 5500,
+                description: "Crisp audio and powerful bass for your music anywhere, with durable, waterproof design.",
+                specs: {
+                    power: "20W",
+                    connectivity: "Bluetooth 5.0",
+                    batteryLife: "Up to 15 hours",
+                    features: "IPX7 Waterproof, Built-in Microphone"
+                }
+            },
+            {
+                name: "Laptop Charger (Universal)",
+                img: "elect.jpg",
+                price: 2500,
+                description: "Reliable and fast charging for most laptops with multiple interchangeable tips for broad compatibility.",
+                specs: {
+                    outputPower: "65W / 90W",
+                    inputVoltage: "AC 100-240V",
+                    compatibility: "Universal with various tips",
+                    cableLength: "1.8m"
+                }
+            },
+            {
+                name: "External SSD (1TB)",
+                img: "elect.jpg",
+                price: 9000,
+                description: "Blazing fast storage for your files, games, and media, offering superior speed and durability over traditional HDDs.",
+                specs: {
+                    capacity: "1TB",
+                    interface: "USB 3.2 Gen 2 (USB-C)",
+                    readSpeed: "Up to 1050 MB/s",
+                    writeSpeed: "Up to 1000 MB/s",
+                    durability: "Shock-resistant"
+                }
+            },
+            {
+                name: "Gaming Mouse",
+                img: "elect.jpg",
+                price: 3800,
+                description: "Precision and comfort for serious gamers, with customizable RGB lighting and programmable buttons.",
+                specs: {
+                    sensor: "Optical (up to 16000 DPI)",
+                    buttons: "8 Programmable Buttons",
+                    connectivity: "Wired USB",
+                    features: "RGB Lighting, Ergonomic Design"
+                }
+            },
+            {
+                name: "Webcam Full HD",
+                img: "elect.jpg",
+                price: 6000,
+                description: "Crystal clear video calls and streaming with autofocus and low-light correction.",
+                specs: {
+                    resolution: "1080p at 30fps",
+                    fieldOfView: "78-degree",
+                    microphone: "Built-in Stereo Microphones",
+                    features: "Autofocus, Automatic Low-Light Correction"
+                }
+            },
+            {
+                name: "USB-C Hub (7-in-1)",
+                img: "elect.jpg",
+                price: 4200,
+                description: "Expand your device's connectivity options with essential ports for modern laptops and tablets.",
+                specs: {
+                    ports: "HDMI, 2x USB 3.0, USB-C PD, SD Card, MicroSD Card, Ethernet",
+                    hdmiResolution: "Up to 4K@30Hz",
+                    powerDelivery: "Up to 100W",
+                    compatibility: "USB-C Laptops/Tablets"
+                }
+            },
+            {
+                name: "Tablet Stand (Adjustable)",
+                img: "elect.jpg",
+                price: 1500,
+                description: "Ergonomic stand for your tablet, providing multiple viewing angles for comfortable use.",
+                specs: {
+                    material: "Aluminum Alloy",
+                    compatibility: "4-13 inch Tablets/Phones",
+                    adjustability: "Multi-angle, Foldable Design",
+                    features: "Anti-slip Silicone Pads"
+                }
+            }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function renderProducts() {
+            const productGrid = document.getElementById('product-grid');
+            productGrid.innerHTML = '';
+            products.forEach((product, index) => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.dataset.productIndex = index; // Store index for easy lookup
+                // Make the entire product div clickable for details
+                productDiv.onclick = () => openProductDetailsModal(index);
+                
+                // Removed key specs from here to keep the product card clean
+
+                productDiv.innerHTML = `
+                    <img src="${product.img}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p class="product-price">KSh ${product.price.toLocaleString()}</p>
+                    <p class="description-short">${product.description}</p>
+                    <button onclick="event.stopPropagation(); addToCart(${index});">Add to Basket</button>
+                    <div class="notification" id="notification-${index}">Added to Basket!</div>
+                `;
+                productGrid.appendChild(productDiv);
+            });
+        }
+
+        function addToCart(productIndex) {
+            const product = products[productIndex];
+            const existingItem = cart.find(item => item.name === product.name);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...product,
+                    quantity: 1
+                });
+            }
+            saveCart();
+            updateCartDisplay();
+            showNotification(productIndex);
+        }
+
+        function removeFromCart(productName) {
+            cart = cart.filter(item => item.name !== productName);
+            saveCart();
+            updateCartDisplay();
+        }
+
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const cartCountElement = document.getElementById('cart-count');
+
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let totalItems = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">Your basket is empty.</p>';
+            } else {
+                cart.forEach(item => {
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.classList.add('cart-item');
+                    cartItemDiv.innerHTML = `
+                        <img src="${item.img}" alt="${item.name}">
+                        <p>${item.name} (x${item.quantity}) - KSh ${(item.price * item.quantity).toLocaleString()}</p>
+                        <button onclick="removeFromCart('${item.name}')">Remove</button>
+                    `;
+                    cartItemsContainer.appendChild(cartItemDiv);
+                    total += item.price * item.quantity;
+                    totalItems += item.quantity;
+                });
+            }
+
+            cartTotalElement.textContent = `Total: KSh ${total.toLocaleString()}`;
+            cartCountElement.textContent = totalItems;
+        }
+
+        function showNotification(productIndex) {
+            const notification = document.getElementById(`notification-${productIndex}`);
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 1500);
+        }
+
+        function toggleCart() {
+            const cartElement = document.getElementById('cart');
+            const overlay = document.querySelector('.overlay');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const basketIcon = document.getElementById('basket-icon');
+
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('change');
+            }
+            closeModal('productDetailsModal'); // Close product details modal if open
+
+            cartElement.classList.toggle('open');
+            overlay.classList.toggle('active');
+            basketIcon.classList.toggle('hide', cartElement.classList.contains('open'));
+        }
+
+        // --- NEW FUNCTION: Open Product Details Modal ---
+        function openProductDetailsModal(productIndex) {
+            const product = products[productIndex];
+            const modal = document.getElementById('productDetailsModal');
+            
+            document.getElementById('modal-product-img').src = product.img;
+            document.getElementById('modal-product-name').textContent = product.name;
+            document.getElementById('modal-product-price').textContent = `KSh ${product.price.toLocaleString()}`;
+            document.getElementById('modal-product-description').textContent = product.description;
+
+            const specsList = document.getElementById('modal-product-specs');
+            specsList.innerHTML = ''; // Clear previous specs
+
+            if (product.specs) {
+                for (const key in product.specs) {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<strong>${capitalizeFirstLetter(key)}:</strong> ${product.specs[key]}`;
+                    specsList.appendChild(listItem);
+                }
+            } else {
+                specsList.innerHTML = '<li>No detailed specifications available.</li>';
+            }
+
+            // Set up Add to Cart button in modal
+            const modalAddToCartBtn = document.getElementById('modal-add-to-cart-btn');
+            modalAddToCartBtn.onclick = () => {
+                addToCart(productIndex); // Add to cart using the same logic
+                closeModal('productDetailsModal'); // Close modal after adding to cart
+            };
+
+            openModal('productDetailsModal'); // Use the generic openModal function
+        }
+
+        function capitalizeFirstLetter(string) {
+            // Converts camelCase (e.g., 'mainCamera') to 'Main Camera' for display
+            return string.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); });
+        }
+
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartDisplay();
+        });
     </script>
 </body>
 </html>
