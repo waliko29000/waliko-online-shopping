@@ -138,7 +138,7 @@
         }
 
         .product img {
-            width: 100%;
+            width: 80%;
             height: auto;
             object-fit: contain; /* Ensures the whole image is visible, no cropping */
             border-radius: 4px;
@@ -492,9 +492,10 @@
         }
 
         #productDetailsModal img {
-            max-width: 90%; /* Increased max-width for image in modal on small screens */
-            height: auto; /* Ensure proportional scaling */
-            object-fit: contain; /* Prevents image from being cut off if aspect ratio differs */
+            max-width: 80%; /* Allow wider images to fill more of the modal width */
+            max-height: 100px; /* <-- KEY CHANGE: Limit height for "shorter" appearance */
+            width: auto; /* Allow width to adjust based on height limit */
+            object-fit: contain; /* Ensures the whole image is visible, no cropping */
             display: block;
             margin: 0 auto 20px auto; /* Center image with bottom margin */
             border-radius: 8px;
@@ -536,7 +537,7 @@
         #productDetailsModal ul li strong {
             color: #222;
         }
-
+        
         #productDetailsModal .modal-close-btn {
             position: absolute;
             top: 10px;
@@ -596,7 +597,8 @@
                 padding-top: 40px; /* Adjust padding-top for close button */
             }
             #productDetailsModal img {
-                max-width: 60%; /* Smaller image in modal on desktop to balance with text */
+                max-width: 70%; /* Adjusted for wider images on desktop */
+                max-height: 250px; /* <-- KEY CHANGE: Increase height for desktop, still controlled */
             }
         }
 
@@ -646,6 +648,9 @@
             }
             #productDetailsModal ul li {
                 font-size: 0.85em; /* Adjusted font size for readability */
+            }
+            #productDetailsModal img {
+                max-height: 150px; /* <-- KEY CHANGE: Smaller height for very small screens */
             }
         }
     </style>
@@ -916,7 +921,7 @@
                 description: "Experience the pinnacle of smartphone technology with the iPhone 15 Pro Max, featuring a titanium design and A17 Pro chip.",
                 specs: {
                     ram: "8GB",
-                    storage: "256GB / 512GB / 1TB",
+                    storage: "128GB / 256GB / 512GB / 1TB",
                     mainCamera: "48MP Main, 12MP Ultra-Wide, 12MP Telephoto (5x Optical Zoom)",
                     selfieCamera: "12MP TrueDepth with Autofocus",
                     display: "6.7-inch Super Retina XDR ProMotion, 120Hz, Always-On",
@@ -924,394 +929,383 @@
                 }
             },
             {
-                name: "iPhone 14",
-                img: "elec3.jpg", // Changed to elec3.jpg
-                price: 110000,
-                description: "A fantastic balance of performance and features, ideal for everyday use with an improved camera system.",
+                name: "iPhone 14 Pro Max",
+                img: "elec3.jpg", 
+                price: 150000,
+                description: "Still a powerhouse, the iPhone 14 Pro Max offers incredible performance, camera capabilities, and battery life.",
+                specs: {
+                    ram: "6GB",
+                    storage: "128GB / 256GB / 512GB / 1TB",
+                    mainCamera: "48MP Main, 12MP Ultra-Wide, 12MP Telephoto",
+                    selfieCamera: "12MP TrueDepth with Autofocus",
+                    display: "6.7-inch Super Retina XDR ProMotion, 120Hz, Always-On",
+                    battery: "Up to 29 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 13 Pro Max",
+                img: "elec4.jpg", 
+                price: 120000,
+                description: "The iPhone 13 Pro Max provides excellent performance and a robust camera system, a great value.",
+                specs: {
+                    ram: "6GB",
+                    storage: "128GB / 256GB / 512GB / 1TB",
+                    mainCamera: "12MP Ultra-Wide, 12MP Wide, 12MP Telephoto",
+                    selfieCamera: "12MP TrueDepth",
+                    display: "6.7-inch Super Retina XDR ProMotion, 120Hz",
+                    battery: "Up to 28 hours video playback"
+                }
+            },
+            {
+                name: "iPhone 12 Pro Max",
+                img: "elec5.jpg", 
+                price: 90000,
+                description: "A classic iPhone with powerful features, 5G capability, and a versatile camera system.",
                 specs: {
                     ram: "6GB",
                     storage: "128GB / 256GB / 512GB",
-                    mainCamera: "12MP Main, 12MP Ultra-Wide",
-                    selfieCamera: "12MP TrueDepth with Autofocus",
-                    display: "6.1-inch Super Retina XDR",
+                    mainCamera: "12MP Ultra-Wide, 12MP Wide, 12MP Telephoto",
+                    selfieCamera: "12MP TrueDepth",
+                    display: "6.7-inch Super Retina XDR",
                     battery: "Up to 20 hours video playback"
                 }
             },
-            {
-                name: "iPhone 13",
-                img: "elec4.jpg", // Changed to elec4.jpg
-                price: 85000,
-                description: "Reliable performance and a great camera for your daily needs, with impressive battery life.",
-                specs: {
-                    ram: "4GB",
-                    storage: "128GB / 256GB / 512GB",
-                    mainCamera: "12MP Main, 12MP Ultra-Wide",
-                    selfieCamera: "12MP TrueDepth",
-                    display: "6.1-inch Super Retina XDR",
-                    battery: "Up to 19 hours video playback"
-                }
-            },
-            {
-                name: "iPhone 12",
-                img: "elec5.jpg", // Changed to elec5.jpg
-                price: 65000,
-                description: "Still a powerful device with strong performance, a durable Ceramic Shield front cover, and 5G capability.",
-                specs: {
-                    ram: "4GB",
-                    storage: "64GB / 128GB / 256GB",
-                    mainCamera: "12MP Main, 12MP Ultra-Wide",
-                    selfieCamera: "12MP TrueDepth",
-                    display: "6.1-inch Super Retina XDR",
-                    battery: "Up to 17 hours video playback"
-                }
-            },
-            {
-                name: "iPhone 11",
-                img: "elec6.jpg", // Changed to elec6.jpg
-                price: 45000,
-                description: "An affordable iPhone with a great dual-camera system and solid performance for its price point.",
-                specs: {
-                    ram: "4GB",
-                    storage: "64GB / 128GB / 256GB",
-                    mainCamera: "12MP Wide, 12MP Ultra-Wide",
-                    selfieCamera: "12MP TrueDepth",
-                    display: "6.1-inch Liquid Retina HD",
-                    battery: "Up to 17 hours video playback"
-                }
-            },
-            // Latest Smartphones (Android)
+            // Samsung Phones
             {
                 name: "Samsung Galaxy S25 Ultra",
-                img: "elec7.jpg", // Changed to elec7.jpg
-                price: 190000,
-                description: "The latest Android flagship with an incredible camera system, powerful processor, and S Pen integration.",
+                img: "elec6.jpg",
+                price: 210000,
+                description: "The ultimate Android flagship with groundbreaking camera, S Pen integration, and top-tier performance.",
                 specs: {
                     ram: "12GB / 16GB",
                     storage: "256GB / 512GB / 1TB",
                     mainCamera: "200MP Wide, 50MP Ultra-Wide, 10MP Telephoto (3x), 10MP Telephoto (10x)",
-                    selfieCamera: "40MP",
-                    display: "6.9-inch Dynamic AMOLED 2X, 120Hz, QHD+",
-                    battery: "5000 mAh, Super Fast Charging"
+                    selfieCamera: "12MP",
+                    display: "6.8-inch Dynamic AMOLED 2X, 120Hz, QHD+",
+                    battery: "5000 mAh, Super Fast Charging 2.0"
                 }
             },
             {
-                name: "Google Pixel 9 Pro",
-                img: "elec8.jpg", // Changed to elec8.jpg
-                price: 150000,
-                description: "Pure Android experience with advanced AI features, a stunning camera, and Google's Tensor G4 chip.",
+                name: "Samsung Galaxy S24 Ultra",
+                img: "elec7.jpg",
+                price: 175000,
+                description: "Elevate your mobile experience with the Galaxy S24 Ultra, featuring AI capabilities and a vibrant display.",
                 specs: {
                     ram: "12GB",
-                    storage: "128GB / 256GB / 512GB",
-                    mainCamera: "50MP Wide, 48MP Ultra-Wide, 48MP Telephoto",
-                    selfieCamera: "10.8MP",
-                    display: "6.7-inch LTPO OLED, 120Hz, QHD+",
-                    battery: "5000 mAh, Fast Charging, Wireless Charging"
+                    storage: "256GB / 512GB / 1TB",
+                    mainCamera: "200MP Wide, 12MP Ultra-Wide, 10MP Telephoto (3x), 50MP Telephoto (5x)",
+                    selfieCamera: "12MP",
+                    display: "6.8-inch Dynamic AMOLED 2X, 120Hz, QHD+",
+                    battery: "5000 mAh, Super Fast Charging 2.0"
                 }
             },
             {
-                name: "OnePlus 13",
-                img: "elec9.jpg", // Changed to elec9.jpg
-                price: 130000,
-                description: "Blazing fast performance, rapid charging, and a smooth display for power users and gamers.",
+                name: "Samsung Galaxy Z Fold 6",
+                img: "elec8.jpg",
+                price: 250000,
+                description: "The future of mobile computing, combining a smartphone and a tablet in one revolutionary device.",
                 specs: {
-                    ram: "12GB / 16GB",
+                    ram: "12GB",
+                    storage: "256GB / 512GB / 1TB",
+                    mainCamera: "50MP Wide, 12MP Ultra-Wide, 10MP Telephoto",
+                    selfieCamera: "10MP (Cover), 4MP (Under Display)",
+                    display: "7.6-inch Foldable Dynamic AMOLED 2X, 120Hz (Main); 6.2-inch Dynamic AMOLED 2X, 120Hz (Cover)",
+                    battery: "4400 mAh, Fast Charging"
+                }
+            },
+            {
+                name: "Samsung Galaxy Z Flip 5",
+                img: "elec9.jpg",
+                price: 130000,
+                description: "Foldable design meets flagship performance, offering a compact form factor without compromise.",
+                specs: {
+                    ram: "8GB",
                     storage: "256GB / 512GB",
-                    mainCamera: "50MP Wide, 48MP Ultra-Wide, 32MP Telephoto",
-                    selfieCamera: "16MP",
-                    display: "6.7-inch AMOLED, 120Hz, QHD+",
-                    battery: "5400 mAh, 100W SuperVOOC Charging"
+                    mainCamera: "12MP Wide, 12MP Ultra-Wide",
+                    selfieCamera: "10MP",
+                    display: "6.7-inch Foldable Dynamic AMOLED 2X, 120Hz (Main); 3.4-inch Super AMOLED (Cover)",
+                    battery: "3700 mAh, Fast Charging"
                 }
             },
             // Laptops
             {
-                name: "MacBook Air M3",
-                img: "elec10.jpg", // Changed to elec10.jpg
-                price: 170000,
-                description: "Ultra-portable and powerful laptop with the efficient Apple M3 chip, perfect for everyday tasks and creative work.",
+                name: "MacBook Pro 16-inch (M3 Max)",
+                img: "elec10.jpg",
+                price: 350000,
+                description: "Unleash extreme performance for demanding professional workflows with the M3 Max chip.",
                 specs: {
-                    ram: "8GB / 16GB / 24GB Unified Memory",
-                    storage: "256GB / 512GB / 1TB / 2TB SSD",
-                    processor: "Apple M3 chip (8-core CPU, 8-10 core GPU)",
-                    display: "13.6-inch Liquid Retina display",
-                    battery: "Up to 18 hours"
+                    processor: "Apple M3 Max chip",
+                    ram: "36GB / 48GB / 64GB / 96GB / 128GB Unified Memory",
+                    storage: "1TB / 2TB / 4TB / 8TB SSD",
+                    display: "16.2-inch Liquid Retina XDR display",
+                    gpu: "Integrated 30-core / 40-core GPU",
+                    battery: "Up to 22 hours"
                 }
             },
             {
-                name: "Dell XPS 15",
-                img: "elec11.jpg", // Changed to elec11.jpg
+                name: "Dell XPS 15 (2024)",
+                img: "elec11.jpg",
+                price: 200000,
+                description: "A perfect blend of performance, stunning display, and premium design for creators and professionals.",
+                specs: {
+                    processor: "Intel Core Ultra 9",
+                    ram: "32GB / 64GB DDR5",
+                    storage: "1TB / 2TB NVMe SSD",
+                    display: "15.6-inch OLED InfinityEdge, 3.5K Touch",
+                    gpu: "NVIDIA GeForce RTX 4070",
+                    battery: "86 Whr"
+                }
+            },
+            {
+                name: "HP Spectre x360 14 (2024)",
+                img: "elec12.jpg",
                 price: 160000,
-                description: "Premium laptop with a stunning InfinityEdge display and excellent performance for creatives and professionals.",
+                description: "Versatile 2-in-1 laptop with a premium design, vibrant OLED display, and excellent battery life.",
                 specs: {
-                    ram: "16GB / 32GB DDR5",
-                    storage: "512GB / 1TB / 2TB NVMe SSD",
-                    processor: "Intel Core Ultra 7/9",
-                    display: "15.6-inch OLED (3.5K) or FHD+ IPS",
-                    battery: "86 Whr, up to 12 hours"
-                }
-            },
-            {
-                name: "HP Spectre x360 14",
-                img: "elec12.jpg", // Changed to elec12.jpg
-                price: 145000,
-                description: "Versatile 2-in-1 laptop with a sleek design, powerful performance, and a vibrant OLED touch display.",
-                specs: {
+                    processor: "Intel Core Ultra 7",
                     ram: "16GB / 32GB LPDDR5",
                     storage: "512GB / 1TB NVMe SSD",
-                    processor: "Intel Core Ultra 5/7",
-                    display: "14-inch OLED touch, 2.8K, 90Hz",
-                    battery: "66 Whr, up to 13 hours"
+                    display: "14-inch OLED, 2.8K Touch",
+                    gpu: "Intel Arc Graphics (Integrated)",
+                    battery: "68 Whr"
                 }
             },
             {
                 name: "Lenovo ThinkPad X1 Carbon Gen 12",
-                img: "elec13.jpg", // Changed to elec13.jpg
-                price: 155000,
-                description: "Business-class laptop known for its durability, security features, and exceptional keyboard, ideal for productivity.",
+                img: "elec13.jpg",
+                price: 190000,
+                description: "The epitome of business laptops, offering exceptional durability, security, and performance in a lightweight chassis.",
                 specs: {
+                    processor: "Intel Core Ultra 7 vPro",
                     ram: "16GB / 32GB LPDDR5X",
-                    storage: "512GB / 1TB / 2TB PCIe Gen4 SSD",
-                    processor: "Intel Core Ultra 5/7/9",
-                    display: "14-inch OLED (2.8K) or IPS (WUXGA)",
-                    battery: "57 Whr, up to 15 hours"
+                    storage: "512GB / 1TB / 2TB NVMe SSD",
+                    display: "14-inch OLED, 2.8K",
+                    gpu: "Intel Arc Graphics (Integrated)",
+                    battery: "57 Whr"
                 }
             },
-            // Computers (Desktops & All-in-Ones)
+            // Headphones
             {
-                name: "iMac 24-inch (M3)",
-                img: "elec14.jpg", // Changed to elec14.jpg
-                price: 250000,
-                description: "Stunning all-in-one desktop with a beautiful 4.5K Retina display and the powerful Apple M3 chip.",
+                name: "Sony WH-1000XM6",
+                img: "elec14.jpg",
+                price: 55000,
+                description: "Industry-leading noise cancellation, exceptional sound quality, and enhanced comfort for the ultimate listening experience.",
                 specs: {
-                    ram: "8GB / 16GB / 24GB Unified Memory",
-                    storage: "256GB / 512GB / 1TB / 2TB SSD",
-                    processor: "Apple M3 chip (8-core CPU, 8-10 core GPU)",
-                    display: "24-inch 4.5K Retina display",
-                    ports: "2-4 Thunderbolt / USB 4 ports"
+                    type: "Over-ear, Wireless",
+                    noiseCancelling: "Yes (Adaptive)",
+                    batteryLife: "Up to 35 hours (NC on)",
+                    connectivity: "Bluetooth 5.4, Multipoint",
+                    audioCodecs: "LDAC, AAC, SBC",
+                    features: "Speak-to-Chat, DSEE Extreme"
                 }
             },
             {
-                name: "Gaming PC (High-End)",
-                img: "elec15.jpg", // Changed to elec15.jpg
-                price: 300000,
-                description: "Unleash ultimate gaming performance with this custom-built high-end PC, featuring the latest graphics and processing power.",
+                name: "Bose QuietComfort Ultra Headphones",
+                img: "elec15.jpg",
+                price: 50000,
+                description: "Immersive audio and world-class noise cancellation combined with a comfortable fit.",
                 specs: {
-                    ram: "32GB DDR5",
-                    storage: "1TB NVMe SSD + 2TB HDD",
-                    processor: "Intel Core i9-14900K or AMD Ryzen 9 7950X3D",
-                    graphicsCard: "NVIDIA GeForce RTX 4090",
-                    cooling: "Liquid Cooling System"
+                    type: "Over-ear, Wireless",
+                    noiseCancelling: "Yes (World-class)",
+                    batteryLife: "Up to 24 hours",
+                    connectivity: "Bluetooth 5.3, Multipoint",
+                    audioCodecs: "SBC, AAC, aptX Adaptive",
+                    features: "Immersive Audio, CustomTune technology"
                 }
             },
-            // Other Electronics (these will still use "elect.jpg" as they are beyond the 15th product)
             {
-                name: "Dell OptiPlex 7000 Tower",
-                img: "elect.jpg",
+                name: "Apple AirPods Max 2",
+                img: "elec16.jpg",
+                price: 70000,
+                description: "High-fidelity audio with Active Noise Cancellation and Spatial Audio, seamlessly integrated with the Apple ecosystem.",
+                specs: {
+                    type: "Over-ear, Wireless",
+                    noiseCancelling: "Yes (Active)",
+                    batteryLife: "Up to 20 hours",
+                    connectivity: "Bluetooth 5.3",
+                    audioCodecs: "AAC",
+                    features: "Spatial Audio with Dynamic Head Tracking, Adaptive EQ"
+                }
+            },
+            {
+                name: "Sennheiser Momentum 4 Wireless",
+                img: "elec17.jpg",
+                price: 48000,
+                description: "Exceptional sound quality and long-lasting comfort, perfect for audiophiles on the go.",
+                specs: {
+                    type: "Over-ear, Wireless",
+                    noiseCancelling: "Yes (Adaptive)",
+                    batteryLife: "Up to 60 hours",
+                    connectivity: "Bluetooth 5.2, Multipoint",
+                    audioCodecs: "aptX Adaptive, AAC, SBC",
+                    features: "Customizable Sound, Smart Pause"
+                }
+            },
+            // Smartwatches
+            {
+                name: "Apple Watch X",
+                img: "elec18.jpg",
+                price: 95000,
+                description: "The next generation of Apple Watch, with advanced health features and a redesigned interface.",
+                specs: {
+                    display: "Always-On Retina display",
+                    processor: "S10 SiP",
+                    healthFeatures: "ECG, Blood Oxygen, Temperature Sensing, Crash Detection",
+                    connectivity: "GPS, Cellular (optional)",
+                    waterResistance: "50m",
+                    batteryLife: "Up to 36 hours (Low Power Mode)"
+                }
+            },
+            {
+                name: "Samsung Galaxy Watch7 Pro",
+                img: "elec19.jpg",
+                price: 80000,
+                description: "Robust and feature-rich, designed for fitness enthusiasts and outdoor adventurers.",
+                specs: {
+                    display: "Sapphire Crystal, Always-On",
+                    processor: "Exynos W940",
+                    healthFeatures: "ECG, Blood Pressure, Body Composition, Advanced Sleep Tracking",
+                    connectivity: "GPS, LTE (optional)",
+                    waterResistance: "5ATM + IP68",
+                    batteryLife: "Up to 80 hours (typical)"
+                }
+            },
+            {
+                name: "Garmin Fenix 8 Pro",
+                img: "elec20.jpg",
+                price: 110000,
+                description: "The ultimate multisport GPS smartwatch with solar charging and advanced mapping.",
+                specs: {
+                    display: "AMOLED, Power Sapphire lens",
+                    sensors: "GPS, Heart Rate, Pulse Ox, Altimeter, Barometer, Compass",
+                    features: "Multi-band GPS, TopoActive maps, Real-time stamina, Training readiness",
+                    waterResistance: "10 ATM",
+                    batteryLife: "Up to 31 days (smartwatch mode, solar)"
+                }
+            },
+            // Drones
+            {
+                name: "DJI Mavic 4 Pro",
+                img: "elec21.jpg",
+                price: 180000,
+                description: "The next evolution in professional aerial photography, with advanced obstacle sensing and superior image quality.",
+                specs: {
+                    camera: "20MP 1-inch CMOS sensor, Adjustable Aperture f/2.8-f/11",
+                    video: "5.4K/30fps, 4K/60fps, 1080p/120fps",
+                    flightTime: "Up to 34 minutes",
+                    transmission: "O3+ Video Transmission (15 km)",
+                    features: "Omnidirectional Obstacle Sensing, ActiveTrack 5.0"
+                }
+            },
+            {
+                name: "DJI Mini 5 Pro",
+                img: "elec22.jpg",
                 price: 90000,
-                description: "Reliable and efficient desktop for office and everyday computing tasks, offering robust performance and security.",
+                description: "Ultra-lightweight and compact, offering professional-grade features for everyday adventurers.",
                 specs: {
-                    ram: "8GB / 16GB DDR4",
-                    storage: "256GB / 512GB SSD",
-                    processor: "Intel Core i5-13th Gen",
-                    graphicsCard: "Integrated Intel Graphics",
-                    ports: "Multiple USB, DisplayPort, HDMI"
+                    camera: "48MP 1/1.3-inch CMOS sensor",
+                    video: "4K/60fps HDR, 1080p/120fps",
+                    flightTime: "Up to 30 minutes (with Intelligent Flight Battery)",
+                    transmission: "O3 Video Transmission (10 km)",
+                    features: "Tri-directional Obstacle Sensing, FocusTrack"
+                }
+            },
+            // Gaming Consoles
+            {
+                name: "PlayStation 6",
+                img: "elec23.jpg",
+                price: 120000,
+                description: "Experience the future of gaming with lightning-fast loading, immersive feedback, and a new generation of incredible PlayStation games.",
+                specs: {
+                    processor: "Custom AMD Zen 4 CPU",
+                    gpu: "Custom AMD RDNA 4 GPU",
+                    storage: "2TB NVMe SSD",
+                    resolution: "Up to 8K, 120fps support",
+                    features: "Ray Tracing, Tempest 3D AudioTech, DualSense 2 controller"
                 }
             },
             {
-                name: "Microsoft Surface Studio 3",
-                img: "elect.jpg",
-                price: 280000,
-                description: "Innovative all-in-one designed for creative professionals, with a stunning adjustable PixelSense touch display.",
+                name: "Xbox Series X2",
+                img: "elec24.jpg",
+                price: 115000,
+                description: "The most powerful Xbox console ever, offering true 4K gaming, incredible speed, and a vast library of games.",
                 specs: {
-                    ram: "32GB DDR4",
-                    storage: "1TB / 2TB SSD",
-                    processor: "Intel Core i7-11370H",
-                    graphicsCard: "NVIDIA GeForce RTX 3060 Laptop GPU",
-                    display: "28-inch PixelSense Display (4500x3000) with touch and Pen support"
-                }
-            },
-            {
-                name: "Wireless Headphones",
-                img: "elect.jpg",
-                price: 7500,
-                description: "Immersive sound and comfortable fit with active noise cancellation and long battery life.",
-                specs: {
-                    connectivity: "Bluetooth 5.2",
-                    batteryLife: "Up to 30 hours",
-                    features: "Active Noise Cancellation, Foldable Design",
-                    audioQuality: "Hi-Res Audio"
-                }
-            },
-            {
-                name: "Smartwatch Pro",
-                img: "elect.jpg",
-                price: 12000,
-                description: "Track your fitness, monitor your health, and stay connected with notifications on your wrist.",
-                specs: {
-                    display: "1.5-inch AMOLED Touchscreen",
-                    sensors: "Heart Rate, SpO2, GPS, Accelerometer",
-                    batteryLife: "Up to 7 days (typical usage)",
-                    waterResistance: "5ATM"
-                }
-            },
-            {
-                name: "Portable Power Bank",
-                img: "elect.jpg",
-                price: 3000,
-                description: "Keep your devices charged on the go with this high-capacity and fast-charging power bank.",
-                specs: {
-                    capacity: "20000 mAh",
-                    ports: "2x USB-A, 1x USB-C (PD)",
-                    output: "Up to 22.5W",
-                    features: "Fast Charging, LED Power Indicator"
-                }
-            },
-            {
-                name: "Bluetooth Speaker",
-                img: "elect.jpg",
-                price: 5500,
-                description: "Crisp audio and powerful bass for your music anywhere, with durable, waterproof design.",
-                specs: {
-                    power: "20W",
-                    connectivity: "Bluetooth 5.0",
-                    batteryLife: "Up to 15 hours",
-                    features: "IPX7 Waterproof, Built-in Microphone"
-                }
-            },
-            {
-                name: "Laptop Charger (Universal)",
-                img: "elect.jpg",
-                price: 2500,
-                description: "Reliable and fast charging for most laptops with multiple interchangeable tips for broad compatibility.",
-                specs: {
-                    outputPower: "65W / 90W",
-                    inputVoltage: "AC 100-240V",
-                    compatibility: "Universal with various tips",
-                    cableLength: "1.8m"
-                }
-            },
-            {
-                name: "External SSD (1TB)",
-                img: "elect.jpg",
-                price: 9000,
-                description: "Blazing fast storage for your files, games, and media, offering superior speed and durability over traditional HDDs.",
-                specs: {
-                    capacity: "1TB",
-                    interface: "USB 3.2 Gen 2 (USB-C)",
-                    readSpeed: "Up to 1050 MB/s",
-                    writeSpeed: "Up to 1000 MB/s",
-                    durability: "Shock-resistant"
-                }
-            },
-            {
-                name: "Gaming Mouse",
-                img: "elect.jpg",
-                price: 3800,
-                description: "Precision and comfort for serious gamers, with customizable RGB lighting and programmable buttons.",
-                specs: {
-                    sensor: "Optical (up to 16000 DPI)",
-                    buttons: "8 Programmable Buttons",
-                    connectivity: "Wired USB",
-                    features: "RGB Lighting, Ergonomic Design"
-                }
-            },
-            {
-                name: "Webcam Full HD",
-                img: "elect.jpg",
-                price: 6000,
-                description: "Crystal clear video calls and streaming with autofocus and low-light correction.",
-                specs: {
-                    resolution: "1080p at 30fps",
-                    fieldOfView: "78-degree",
-                    microphone: "Built-in Stereo Microphones",
-                    features: "Autofocus, Automatic Low-Light Correction"
-                }
-            },
-            {
-                name: "USB-C Hub (7-in-1)",
-                img: "elect.jpg",
-                price: 4200,
-                description: "Expand your device's connectivity options with essential ports for modern laptops and tablets.",
-                specs: {
-                    ports: "HDMI, 2x USB 3.0, USB-C PD, SD Card, MicroSD Card, Ethernet",
-                    hdmiResolution: "Up to 4K@30Hz",
-                    powerDelivery: "Up to 100W",
-                    compatibility: "USB-C Laptops/Tablets"
-                }
-            },
-            {
-                name: "Tablet Stand (Adjustable)",
-                img: "elect.jpg",
-                price: 1500,
-                description: "Ergonomic stand for your tablet, providing multiple viewing angles for comfortable use.",
-                specs: {
-                    material: "Aluminum Alloy",
-                    compatibility: "4-13 inch Tablets/Phones",
-                    adjustability: "Multi-angle, Foldable Design",
-                    features: "Anti-slip Silicone Pads"
+                    processor: "Custom AMD Zen 4 CPU",
+                    gpu: "Custom AMD RDNA 4 GPU",
+                    storage: "2TB NVMe SSD",
+                    resolution: "Up to 8K, 120fps support",
+                    features: "DirectX Raytracing, Variable Rate Shading, Quick Resume"
                 }
             }
         ];
 
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cart = [];
 
         function renderProducts() {
             const productGrid = document.getElementById('product-grid');
-            productGrid.innerHTML = '';
-            products.forEach((product, index) => {
+            productGrid.innerHTML = ''; // Clear existing products
+            products.forEach(product => {
                 const productDiv = document.createElement('div');
                 productDiv.classList.add('product');
-                productDiv.dataset.productIndex = index; // Store index for easy lookup
-                // Make the entire product div clickable for details
-                productDiv.onclick = () => openProductDetailsModal(index);
-                
-                // Removed key specs from here to keep the product card clean
-
                 productDiv.innerHTML = `
                     <img src="${product.img}" alt="${product.name}">
                     <h3>${product.name}</h3>
                     <p class="product-price">KSh ${product.price.toLocaleString()}</p>
                     <p class="description-short">${product.description}</p>
-                    <button onclick="event.stopPropagation(); addToCart(${index});">Add to Basket</button>
-                    <div class="notification" id="notification-${index}">Added to Basket!</div>
+                    <button class="add-to-cart-btn" data-product-name="${product.name}" data-product-price="${product.price}" data-product-img="${product.img}">Add to Basket</button>
+                    <div class="notification" style="display: none;">Added to basket!</div>
                 `;
                 productGrid.appendChild(productDiv);
+
+                // Add event listener for clicking the product div (for details modal)
+                productDiv.addEventListener('click', (event) => {
+                    // Only open modal if the click wasn't on the "Add to Basket" button
+                    if (!event.target.classList.contains('add-to-cart-btn')) {
+                        showProductDetails(product);
+                    }
+                });
+            });
+
+            // Attach event listeners to "Add to Basket" buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productName = event.target.dataset.productName;
+                    const productPrice = parseFloat(event.target.dataset.productPrice);
+                    const productImg = event.target.dataset.productImg;
+                    addToCart(productName, productPrice, productImg);
+
+                    // Show notification
+                    const notification = event.target.nextElementSibling;
+                    notification.style.display = 'block';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 1500); // Hide after 1.5 seconds
+                });
             });
         }
 
-        function addToCart(productIndex) {
-            const product = products[productIndex];
-            const existingItem = cart.find(item => item.name === product.name);
-
+        function addToCart(name, price, img) {
+            const existingItem = cart.find(item => item.name === name);
             if (existingItem) {
                 existingItem.quantity++;
             } else {
-                cart.push({ ...product,
-                    quantity: 1
-                });
+                cart.push({ name, price, img, quantity: 1 });
             }
-            saveCart();
-            updateCartDisplay();
-            showNotification(productIndex);
-        }
-
-        function removeFromCart(productName) {
-            cart = cart.filter(item => item.name !== productName);
-            saveCart();
             updateCartDisplay();
         }
 
-        function saveCart() {
-            localStorage.setItem('cart', JSON.stringify(cart));
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartDisplay();
         }
 
         function updateCartDisplay() {
             const cartItemsContainer = document.getElementById('cart-items');
-            const cartTotalElement = document.getElementById('cart-total');
             const cartCountElement = document.getElementById('cart-count');
-
-            cartItemsContainer.innerHTML = '';
+            const cartTotalElement = document.getElementById('cart-total');
             let total = 0;
-            let totalItems = 0;
+
+            cartItemsContainer.innerHTML = ''; // Clear current cart display
 
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '<p style="text-align: center; color: #777; margin-top: 20px;">Your basket is empty.</p>';
@@ -1326,20 +1320,11 @@
                     `;
                     cartItemsContainer.appendChild(cartItemDiv);
                     total += item.price * item.quantity;
-                    totalItems += item.quantity;
                 });
             }
 
+            cartCountElement.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartTotalElement.textContent = `Total: KSh ${total.toLocaleString()}`;
-            cartCountElement.textContent = totalItems;
-        }
-
-        function showNotification(productIndex) {
-            const notification = document.getElementById(`notification-${productIndex}`);
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 1500);
         }
 
         function toggleCart() {
@@ -1353,57 +1338,48 @@
                 sidebar.classList.remove('open');
                 hamburger.classList.remove('change');
             }
-            closeModal('productDetailsModal'); // Close product details modal if open
+            closeModal('productDetailsModal'); // Close product details modal
 
             cartElement.classList.toggle('open');
             overlay.classList.toggle('active');
             basketIcon.classList.toggle('hide', cartElement.classList.contains('open'));
         }
 
-        // --- NEW FUNCTION: Open Product Details Modal ---
-        function openProductDetailsModal(productIndex) {
-            const product = products[productIndex];
+        function showProductDetails(product) {
             const modal = document.getElementById('productDetailsModal');
-            
             document.getElementById('modal-product-img').src = product.img;
             document.getElementById('modal-product-name').textContent = product.name;
             document.getElementById('modal-product-price').textContent = `KSh ${product.price.toLocaleString()}`;
             document.getElementById('modal-product-description').textContent = product.description;
 
             const specsList = document.getElementById('modal-product-specs');
-            specsList.innerHTML = ''; // Clear previous specs
-
-            if (product.specs) {
-                for (const key in product.specs) {
+            specsList.innerHTML = '';
+            for (const key in product.specs) {
+                if (product.specs.hasOwnProperty(key)) {
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `<strong>${capitalizeFirstLetter(key)}:</strong> ${product.specs[key]}`;
+                    listItem.innerHTML = `<strong>${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</strong> ${product.specs[key]}`;
                     specsList.appendChild(listItem);
                 }
-            } else {
-                specsList.innerHTML = '<li>No detailed specifications available.</li>';
             }
 
-            // Set up Add to Cart button in modal
+            // Set up "Add to Basket" button in modal
             const modalAddToCartBtn = document.getElementById('modal-add-to-cart-btn');
             modalAddToCartBtn.onclick = () => {
-                addToCart(productIndex); // Add to cart using the same logic
-                closeModal('productDetailsModal'); // Close modal after adding to cart
+                addToCart(product.name, product.price, product.img);
+                closeModal('productDetailsModal');
+                // Optional: Show a brief notification on the main page or open the cart
+                // toggleCart(); 
             };
 
-            openModal('productDetailsModal'); // Use the generic openModal function
+            openModal('productDetailsModal');
         }
 
-        function capitalizeFirstLetter(string) {
-            // Converts camelCase (e.g., 'mainCamera') to 'Main Camera' for display
-            return string.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); });
-        }
-
-
-        // Initialize on page load
+        // Initial render of products and cart
         document.addEventListener('DOMContentLoaded', () => {
             renderProducts();
             updateCartDisplay();
         });
     </script>
+
 </body>
 </html>
