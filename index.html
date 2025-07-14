@@ -272,6 +272,21 @@
                 max-width: 250px;
             }
         }
+        .update-box {
+    border: 1px solid #FFD700; /* A nice border color, e.g., gold */
+    padding: 15px; /* Space inside the box */
+    margin-top: 20px; /* Space above the box */
+    background-color: #FFFACD; /* A light background color, e.g., lemon chiffon */
+    border-radius: 8px; /* Slightly rounded corners */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-align: center; /* Center the text */
+}
+
+/* To ensure the red text color from your original p tag still applies */
+.update-box p {
+    color: red;
+    margin-bottom: 0; /* Remove default paragraph bottom margin */
+}
     </style>
     <script>
         function showSection(sectionId) {
@@ -526,13 +541,16 @@
 
     <div class="content" id="shop" style="display: none;">
         <h3>Shop</h3>
-<p>Select your category:</p>
-<div class="shop-links">
-    <a href="for men.html">Shop for Men</a>
-    <a href="for women.html">Shop for Women</a>
-    <a href="Electronics.html">Electronics</a>
-    <p style="color: red;">We're currently making a lot of improvements and adding exciting new products to enhance your shopping experience! Stay tuned for amazing updates, including new categories like Shop for Baby Products and Groceries! Keep an eye out!</p>
-</div>
+        <p>Select your category:</p>
+        <div class="shop-links">
+            <a href="for men.html">Shop for Men</a>
+            <a href="for women.html">Shop for Women</a>
+            <a href="Electronics.html">Electronics</a>
+            <div class="update-box">
+                <p style="color: red;">We're currently making a lot of improvements and adding exciting new products to enhance your shopping experience! Stay tuned for amazing updates, including new categories like Shop for Baby Products and Groceries! Keep an eye out!</p>
+            </div>
+        </div>
+    </div>
           
         </div>
     </div>
