@@ -287,6 +287,24 @@
     color: red;
     margin-bottom: 0; /* Remove default paragraph bottom margin */
 }
+/* CSS for welcome slow, shop-now faster */
+
+@keyframes welcomeRotateFadeIn {
+    from {
+        opacity: 0;
+        transform: perspective(600px) rotateX(-20deg);
+        transform-origin: top center;
+    }
+    to {
+        opacity: 1;
+        transform: perspective(600px) rotateX(0deg);
+    }
+}
+
+.intro {
+    /* Welcome message: Very slow (5 seconds) and repeating */
+    animation: welcomeRotateFadeIn 5s linear infinite;
+    background-image: url('http://googleusercontent.com/image_generation_content/0
     </style>
     <script>
         function showSection(sectionId) {
@@ -320,7 +338,7 @@
             showSection('intro');
         };
     </script>
-</head>
+</head><link rel="stylesheet" href="style.css">
 <body>
     <header>
         <div class="profile">
