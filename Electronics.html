@@ -435,16 +435,15 @@
             margin-top: 0;
             font-size: 1.3em;
             color: #333;
-            flex-shrink: 0; /* Prevent title from shrinking */
         }
 
         .modal-content p {
-            margin: 10px 0; /* Reduced margin */
+            margin: 15px 0;
             font-size: 1em;
             line-height: 1.5;
             color: #555;
-            flex-shrink: 0; /* Prevent paragraphs from shrinking */
         }
+
 
         .modal-content button {
             margin-top: 15px;
@@ -452,13 +451,8 @@
             padding: 10px 20px;
             display: inline-block;
             margin: 0 8px;
-            border-radius: 5px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
+
 
         .modal-content .confirm-btn {
             background-color: #28a745;
@@ -680,7 +674,7 @@
         <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-undo"></i> Returns & Refunds</a>
         <hr style="border-color: #333; margin: 10px 20px;">
         <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-heart"></i> Wishlist</a>
-        <a href="#" onclick="showAlertAndPreventDefault(event)"><i class="fas fa-bell"></i> Notifications</a>
+
         <a href="#" onclick="handleAccountAction(event, 'deactivate')"><i class="fas fa-user-slash"></i> Deactivate Account</a>
         <a href="#" onclick="handleAccountAction(event, 'delete')"><i class="fas fa-user-times"></i> Delete Account</a>
         <hr style="border-color: #333; margin: 10px 20px;">
