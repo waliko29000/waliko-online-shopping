@@ -864,28 +864,23 @@
 
         // Simulate payment process
         function proceedToPayment() {
-            alert('Redirecting to login page to proceed with payment...');
-            // In a real application, you would redirect to a login/payment gateway
-            window.location.href = "fashion login.html";
+            alert('Please log in to complete your payment.');
             closeModal('payNowModal');
+            closeAllMenus();
         }
 
         // Simulate Deactivate Account
         function deactivateAccountConfirmed() {
             alert('Your account has been deactivated. You can reactivate it by logging in again.');
-            // In a real application, you'd send a request to the server to deactivate the account
-            // and then potentially log the user out and redirect them to the login page.
-            window.location.href = "fashion login.html";
             closeModal('deactivateAccountModal');
+            closeAllMenus();
         }
 
         // Simulate Delete Account
         function deleteAccountConfirmed() {
             alert('Your account has been permanently deleted. We are sorry to see you go!');
-            // In a real application, you'd send a request to the server to permanently delete the account
-            // and then log the user out and redirect them to a confirmation or homepage.
-            window.location.href = "index.html"; // Redirect to homepage after deletion
             closeModal('deleteAccountModal');
+            closeAllMenus();
         }
 
 
