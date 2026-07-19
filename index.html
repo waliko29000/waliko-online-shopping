@@ -764,8 +764,8 @@
         @media (max-width: 768px) {
             header { padding: 0 16px; }
             .header-inner { flex-direction: column; padding: 12px 0; gap: 12px; }
-            nav { justify-content: center; gap: 6px; }
-            nav a { font-size: 0.78rem; padding: 6px 12px; }
+            nav { justify-content: center; gap: 8px; }
+            nav a { font-size: 0.78rem; padding: 10px 14px; }
 
             main { padding: 24px 16px; }
 
@@ -773,11 +773,21 @@
             .hero-visual { height: 200px; }
             .features { grid-template-columns: 1fr; }
             .home-categories { grid-template-columns: 1fr; }
-            .trust-strip { justify-content: center; }
+            .trust-strip { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
             .shop-grid { grid-template-columns: 1fr; }
             .contact-grid { grid-template-columns: 1fr; }
             .feedback-wrap { grid-template-columns: 1fr; }
             .about-values { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .btn-primary, .btn-outline {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-left: 0;
+            }
+            .btn-outline { margin-top: 12px; }
         }
     </style>
 </head>
